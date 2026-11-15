@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnglaisFacile 2.0 — Apprendre l'anglais gratuitement et interactivement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#1D4ED8',
+                            blueDark: '#1E3A8A',
+                            blueLight: '#EFF6FF',
+                            red: '#DC2626',
+                            redDark: '#991B1B',
+                            redLight: '#FEF2F2',
+                            slateBg: '#F8FAFC',
+                            slateDark: '#0F172A',
+                            slateMuted: '#475569',
+                            borderLight: '#E2E8F0'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFC;
+            color: #0F172A;
+            overflow-x: hidden;
+        }
+        .fade-in {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Scrollbar épurée */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #F1F5F9; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-brand-blue selection:text-white">
+
+    <!-- NOTIFICATION TOAST NON-INTRUSIVE -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ======================================================================= -->
+    <!-- BARRE DE NAVIGATION PRINCIPALE                                          -->
+    <!-- ======================================================================= -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand-borderLight shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                
+                <!-- Logo Vectoriel Moderne (Palette Bleu / Rouge / Blanc / Noir) -->
+                <button onclick="navigateTo('home')" class="flex items-center gap-3 text-left group focus:outline-none">
+                    <div class="w-10 h-10 rounded-xl bg-brand-blue flex items-center justify-center relative overflow-hidden shadow-sm group-hover:scale-105 transition-transform">
+                        <!-- Motif Union Jack géométrique minimaliste -->
+                        <svg viewBox="0 0 40 40" class="w-full h-full">
+                            <rect width="40" height="40" fill="#1D4ED8"/>
+                            <path d="M0 0 L40 40 M40 0 L0 40" stroke="#FFFFFF" stroke-width="6"/>
+                            <path d="M0 0 L40 40 M40 0 L0 40" stroke="#DC2626" stroke-width="2.5"/>
+                            <path d="M20 0 V40 M0 20 H40" stroke="#FFFFFF" stroke-width="9"/>
+                            <path d="M20 0 V40 M0 20 H40" stroke="#DC2626" stroke-width="5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black tracking-tight text-brand-slateDark">Anglais<span class="text-brand-blue">Facile</span></span>
+                        <span class="ml-1.5 text-[10px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-red text-white">2.0</span>
+                    </div>
+                </button>
+
+                <!-- Menu Desktop -->
+                <nav class="hidden md:flex items-center gap-1.5 bg-brand-slateBg p-1.5 rounded-2xl border border-brand-borderLight">
+                    <button onclick="navigateTo('home')" data-nav="home" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+                        Accueil
+                    </button>
+                    <button onclick="navigateTo('lessons')" data-nav="lessons" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+                        Fiches de Cours (18)
+                    </button>
+                    <button onclick="navigateTo('verbs')" data-nav="verbs" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+                        Verbes Irréguliers
+                    </button>
+                    <button onclick="navigateTo('test')" data-nav="test" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+                        Test de Niveau
+                    </button>
+                    <button onclick="navigateTo('game')" data-nav="game" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+                        Coffre Mystère
+                    </button>
+                </nav>
+
+                <!-- Compteur de progression & Bouton Mobile -->
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-blueLight border border-blue-200 text-xs font-bold text-brand-blueDark">
+                        <span>Cours validés :</span>
+                        <span id="header-progress-count" class="px-1.5 py-0.5 rounded bg-brand-blue text-white">0/18</span>
+                    </div>
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl border border-brand-borderLight text-brand-slateDark hover:bg-brand-slateBg" aria-label="Menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Déroulant -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-brand-borderLight px-4 py-3 space-y-1.5 shadow-lg">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" data-nav="home" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold block">Accueil</button>
+            <button onclick="navigateTo('lessons'); toggleMobileMenu()" data-nav="lessons" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold block">Fiches de Cours (18)</button>
+            <button onclick="navigateTo('verbs'); toggleMobileMenu()" data-nav="verbs" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold block">Verbes Irréguliers (146)</button>
+            <button onclick="navigateTo('test'); toggleMobileMenu()" data-nav="test" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold block">Test de Niveau CECRL</button>
+            <button onclick="navigateTo('game'); toggleMobileMenu()" data-nav="game" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold block">Jeu du Coffre Mystère</button>
+        </div>
+    </header>
+
+    <!-- ======================================================================= -->
+    <!-- CONTENU PRINCIPAL (SPA)                                                 -->
+    <!-- ======================================================================= -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- =================================================================== -->
+        <!-- VUE 1 : ACCUEIL                                                     -->
+        <!-- =================================================================== -->
+        <section id="view-home" class="app-view space-y-10 fade-in">
+            
+            <!-- Hero Section -->
+            <div class="bg-white rounded-3xl border border-brand-borderLight p-6 sm:p-10 lg:p-12 shadow-sm relative overflow-hidden">
+                <!-- Illustration Vectorielle Décorative Arrière-Plan -->
+                <div class="hidden lg:block absolute right-0 top-0 bottom-0 w-1/3 pointer-events-none opacity-95">
+                    <svg viewBox="0 0 400 400" class="w-full h-full object-cover">
+                        <rect width="400" height="400" fill="#EFF6FF"/>
+                        <circle cx="320" cy="80" r="140" fill="#1D4ED8" fill-opacity="0.08"/>
+                        <circle cx="360" cy="340" r="160" fill="#DC2626" fill-opacity="0.08"/>
+                        <!-- Illustration stylisée Big Ben / Londres -->
+                        <g transform="translate(150, 45)">
+                            <rect x="45" y="90" width="90" height="260" rx="8" fill="#0F172A"/>
+                            <polygon points="90,15 38,90 142,90" fill="#DC2626"/>
+                            <rect x="38" y="88" width="104" height="12" rx="4" fill="#1D4ED8"/>
+                            <circle cx="90" cy="145" r="32" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="5"/>
+                            <line x1="90" y1="145" x2="90" y2="125" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round"/>
+                            <line x1="90" y1="145" x2="106" y2="145" stroke="#DC2626" stroke-width="3.5" stroke-linecap="round"/>
+                            <rect x="62" y="200" width="18" height="120" rx="4" fill="#334155"/>
+                            <rect x="100" y="200" width="18" height="120" rx="4" fill="#334155"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="relative z-10 max-w-2xl space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-redLight border border-red-200 text-brand-red text-xs font-bold uppercase tracking-wider">
+                        <span class="w-2 h-2 rounded-full bg-brand-red animate-pulse"></span>
+                        100% Gratuit • Cours & Exercices Interactifs
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-slateDark tracking-tight leading-tight">
+                        Apprenez l'anglais avec <span class="text-brand-blue">clarté</span> et <span class="text-brand-red">méthode</span>.
+                    </h1>
+                    <p class="text-base sm:text-lg text-brand-slateMuted leading-relaxed">
+                        Retrouvez l'intégralité des fiches pédagogiques de référence d'AnglaisFacile dans une interface moderne : règles précises, prononciation audio britannique, exercices corrigés et liste complète des verbes irréguliers.
+                    </p>
+
+                    <!-- Barre de recherche rapide -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                        <div class="relative flex-grow">
+                            <input type="text" id="home-quick-search" onkeyup="if(event.key==='Enter') executeHomeSearch()" placeholder="Rechercher un cours (ex: Present Perfect, Had better, For/Since...)" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-brand-borderLight bg-brand-slateBg focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue text-sm transition-all">
+                            <svg class="w-5 h-5 text-brand-slateMuted absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <button onclick="executeHomeSearch()" class="bg-brand-blue hover:bg-brand-blueDark text-white font-bold px-6 py-3.5 rounded-2xl shadow-sm transition-all whitespace-nowrap">
+                            Rechercher
+                        </button>
+                    </div>
+
+                    <!-- Raccourcis rapides -->
+                    <div class="flex flex-wrap items-center gap-2 text-xs text-brand-slateMuted">
+                        <span class="font-semibold text-brand-slateDark">Populaire :</span>
+                        <button onclick="openLesson('preterit-vs-present-perfect')" class="px-2.5 py-1 rounded-lg bg-brand-slateBg hover:bg-brand-blueLight hover:text-brand-blue border border-brand-borderLight transition-colors">Prétérit vs Present Perfect</button>
+                        <button onclick="openLesson('had-better')" class="px-2.5 py-1 rounded-lg bg-brand-slateBg hover:bg-brand-blueLight hover:text-brand-blue border border-brand-borderLight transition-colors">Had better</button>
+                        <button onclick="openLesson('for-since-ago')" class="px-2.5 py-1 rounded-lg bg-brand-slateBg hover:bg-brand-blueLight hover:text-brand-blue border border-brand-borderLight transition-colors">For / Since / Ago</button>
+                        <button onclick="openLesson('faux-amis')" class="px-2.5 py-1 rounded-lg bg-brand-slateBg hover:bg-brand-blueLight hover:text-brand-blue border border-brand-borderLight transition-colors">Faux-amis</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cartes des 4 Modules Principaux -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div onclick="navigateTo('lessons')" class="group bg-white rounded-3xl border border-brand-borderLight hover:border-brand-blue p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-brand-blueLight text-brand-blue flex items-center justify-center mb-4 group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        </div>
+                        <h2 class="text-lg font-extrabold text-brand-slateDark mb-1">18 Fiches de Cours</h2>
+                        <p class="text-xs text-brand-slateMuted leading-relaxed">Grammaire, conjugaison, modaux et faux-amis avec exercices corrigés.</p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-brand-borderLight text-xs font-bold text-brand-blue flex items-center justify-between">
+                        <span>Explorer le catalogue</span>
+                        <span>→</span>
+                    </div>
+                </div>
+
+                <div onclick="navigateTo('verbs')" class="group bg-white rounded-3xl border border-brand-borderLight hover:border-brand-red p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-brand-redLight text-brand-red flex items-center justify-center mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h2 class="text-lg font-extrabold text-brand-slateDark mb-1">Verbes Irréguliers</h2>
+                        <p class="text-xs text-brand-slateMuted leading-relaxed">Liste exhaustive (146 verbes) triée par niveaux A1-A2, B1-B2 et C1 avec audio.</p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-brand-borderLight text-xs font-bold text-brand-red flex items-center justify-between">
+                        <span>Réviser les verbes</span>
+                        <span>→</span>
+                    </div>
+                </div>
+
+                <div onclick="navigateTo('test')" class="group bg-white rounded-3xl border border-brand-borderLight hover:border-brand-blue p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-slate-100 text-brand-slateDark flex items-center justify-center mb-4 group-hover:bg-brand-slateDark group-hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h2 class="text-lg font-extrabold text-brand-slateDark mb-1">Test de Niveau</h2>
+                        <p class="text-xs text-brand-slateMuted leading-relaxed">Évaluez votre niveau CECRL (A1 à C1) en 15 questions progressives.</p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-brand-borderLight text-xs font-bold text-brand-slateDark flex items-center justify-between">
+                        <span>Passer le test</span>
+                        <span>→</span>
+                    </div>
+                </div>
+
+                <div onclick="navigateTo('game')" class="group bg-white rounded-3xl border border-brand-borderLight hover:border-brand-red p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-brand-blueLight text-brand-blue flex items-center justify-center mb-4 group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <h2 class="text-lg font-extrabold text-brand-slateDark mb-1">Coffre Mystère</h2>
+                        <p class="text-xs text-brand-slateMuted leading-relaxed">Le jeu emblématique d'AnglaisFacile revisité : devinez le mot anglais caché.</p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-brand-borderLight text-xs font-bold text-brand-blue flex items-center justify-between">
+                        <span>Jouer maintenant</span>
+                        <span>→</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Leçon à la Une -->
+            <div class="bg-brand-slateDark text-white rounded-3xl p-6 sm:p-10 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div class="space-y-2 max-w-2xl">
+                    <span class="inline-block px-3 py-1 rounded-full bg-brand-red text-white text-xs font-bold uppercase tracking-wider">La leçon incontournable</span>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold">Had better vs Should : comment donner un conseil ?</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        Ne confondez plus la recommandation amicale (<em>You should rest</em>) et l'avertissement urgent avec risque de conséquence négative (<em>You'd better hurry up!</em>).
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-3 shrink-0">
+                    <button onclick="openLesson('had-better')" class="bg-brand-blue hover:bg-blue-600 text-white font-bold px-6 py-3.5 rounded-2xl transition-colors">
+                        Ouvrir la fiche & l'exercice
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VUE 2 : CATALOGUE DES 18 FICHES DE COURS & LECTEUR DE FICHE         -->
+        <!-- =================================================================== -->
+        <section id="view-lessons" class="app-view hidden space-y-8 fade-in">
+            
+            <!-- SOUS-VUE A : LISTE & RECHERCHE DES FICHES -->
+            <div id="lessons-catalog-panel" class="space-y-6">
+                <div class="bg-white rounded-3xl border border-brand-borderLight p-6 sm:p-8 shadow-sm">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blueLight px-3 py-1 rounded-full">Bibliothèque Pédagogique</span>
+                            <h1 class="text-2xl sm:text-3xl font-black text-brand-slateDark mt-2">Fiches de Cours & Exercices Interactifs</h1>
+                            <p class="text-sm text-brand-slateMuted">Le contenu pédagogique authentique d'AnglaisFacile, modernisé avec audio et correction instantanée.</p>
+                        </div>
+                        <div>
+                            <span id="lessons-result-count" class="inline-block px-4 py-2 rounded-xl bg-brand-slateBg border border-brand-borderLight text-xs font-bold text-brand-slateDark">
+                                18 fiches disponibles
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Moteur de recherche & Filtres -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                        <div class="md:col-span-6 relative">
+                            <input type="text" id="lesson-search-input" onkeyup="filterLessons()" placeholder="Rechercher un cours, une règle, un mot (ex: Prétérit, Since, Passive, Faux-amis...)" class="w-full pl-10 pr-9 py-3 rounded-xl border border-brand-borderLight bg-brand-slateBg focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue text-sm">
+                            <svg class="w-5 h-5 text-brand-slateMuted absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <button id="lesson-search-clear" onclick="resetLessonFilters()" class="hidden absolute right-3 top-3 text-xs font-bold text-brand-slateMuted hover:text-brand-slateDark">✕</button>
+                        </div>
+                        <div class="md:col-span-3">
+                            <select id="lesson-level-select" onchange="filterLessons()" class="w-full px-3.5 py-3 rounded-xl border border-brand-borderLight bg-white text-sm font-semibold text-brand-slateDark focus:outline-none focus:ring-2 focus:ring-brand-blue">
+                                <option value="all">Tous les niveaux</option>
+                                <option value="A1-A2">Débutant (A1-A2)</option>
+                                <option value="B1-B2">Intermédiaire (B1-B2)</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-3">
+                            <select id="lesson-cat-select" onchange="filterLessons()" class="w-full px-3.5 py-3 rounded-xl border border-brand-borderLight bg-white text-sm font-semibold text-brand-slateDark focus:outline-none focus:ring-2 focus:ring-brand-blue">
+                                <option value="all">Toutes les catégories</option>
+                                <option value="Temps & Conjugaison">Temps & Conjugaison</option>
+                                <option value="Grammaire">Grammaire</option>
+                                <option value="Vocabulaire & Pièges">Vocabulaire & Pièges</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grille des Fiches -->
+                <div id="lessons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+            </div>
+
+            <!-- SOUS-VUE B : LECTURE D'UNE FICHE + EXERCICE INTERACTIF -->
+            <div id="lesson-reader-panel" class="hidden space-y-8 fade-in">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <button onclick="closeLessonReader()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-brand-borderLight hover:border-brand-blue text-sm font-bold text-brand-slateDark hover:text-brand-blue transition-colors shadow-sm">
+                        <span>← Retour aux 18 fiches</span>
+                    </button>
+                    <div class="text-xs font-semibold text-brand-slateMuted">
+                        <span id="reader-cat">Catégorie</span> / <span id="reader-title-crumb" class="text-brand-slateDark">Fiche</span>
+                    </div>
+                </div>
+
+                <!-- Contenu du Cours -->
+                <article id="lesson-reader-body" class="bg-white rounded-3xl border border-brand-borderLight p-6 sm:p-10 shadow-sm space-y-6"></article>
+
+                <!-- Exercice d'application de la Fiche -->
+                <div class="bg-white rounded-3xl border border-brand-borderLight p-6 sm:p-10 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-borderLight pb-6 mb-6">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-red">Exercice d'application</span>
+                            <h2 class="text-2xl font-extrabold text-brand-slateDark">Testez vos acquis sur cette fiche</h2>
+                            <p class="text-sm text-brand-slateMuted">Complétez les 5 questions puis cliquez sur Corriger.</p>
+                        </div>
+                        <div class="bg-brand-slateBg border border-brand-borderLight px-5 py-3 rounded-2xl flex items-center gap-4">
+                            <div>
+                                <p class="text-xs font-semibold text-brand-slateMuted">Résultat</p>
+                                <p class="text-xl font-black text-brand-blue"><span id="exo-score-val">0</span> / <span id="exo-total-val">5</span></p>
+                            </div>
+                            <div class="w-24 h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                                <div id="exo-score-bar" class="h-full bg-brand-blue transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="lesson-exercise-list" class="space-y-5"></div>
+
+                    <div class="mt-8 pt-6 border-t border-brand-borderLight flex flex-wrap items-center justify-between gap-4">
+                        <button onclick="renderCurrentLessonExercise()" class="px-5 py-3 rounded-xl border border-brand-borderLight text-sm font-bold text-brand-slateMuted hover:text-brand-slateDark hover:bg-brand-slateBg transition-colors">
+                            Réinitialiser
+                        </button>
+                        <button onclick="gradeCurrentLessonExercise()" class="bg-brand-blue hover:bg-brand-blueDark text-white font-bold px-8 py-3.5 rounded-2xl shadow-sm transition-all">
+                            Corriger mes réponses
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VUE 3 : VERBES IRRÉGULIERS EXHAUSTIFS PAR NIVEAU                    -->
+        <!-- =================================================================== -->
+        <section id="view-verbs" class="app-view hidden space-y-6 fade-in">
+            <div class="bg-white rounded-3xl border border-brand-borderLight p-6 sm:p-8 shadow-sm">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-red bg-brand-redLight px-3 py-1 rounded-full">Référentiel Complet</span>
+                        <h1 class="text-2xl sm:text-3xl font-black text-brand-slateDark mt-2">Liste Exhaustive des Verbes Irréguliers</h1>
+                        <p class="text-sm text-brand-slateMuted">Sélectionnez votre niveau, recherchez un verbe ou masquez une colonne pour vous entraîner.</p>
+                    </div>
+
+                    <!-- Mode Révision -->
+                    <div class="flex flex-wrap items-center gap-1.5 bg-brand-slateBg p-2 rounded-2xl border border-brand-borderLight">
+                        <span class="text-xs font-bold text-brand-slateMuted px-2">Masquer :</span>
+                        <button onclick="setVerbHideColumn('none')" id="vhide-none" class="vhide-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-slateDark text-white">Rien</button>
+                        <button onclick="setVerbHideColumn('past')" id="vhide-past" class="vhide-btn px-3 py-1.5 rounded-xl text-xs font-bold text-brand-slateDark hover:bg-white">Prétérit</button>
+                        <button onclick="setVerbHideColumn('participle')" id="vhide-participle" class="vhide-btn px-3 py-1.5 rounded-xl text-xs font-bold text-brand-slateDark hover:bg-white">Participe</button>
+                        <button onclick="setVerbHideColumn('fr')" id="vhide-fr" class="vhide-btn px-3 py-1.5 rounded-xl text-xs font-bold text-brand-slateDark hover:bg-white">Français</button>
+                    </div>
+                </div>
+
+                <!-- Onglets de Sélection par Niveau -->
+                <div class="flex flex-wrap items-center gap-2 pb-5 mb-5 border-b border-brand-borderLight">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-brand-slateMuted mr-1">Niveau :</span>
+                    <button onclick="setVerbLevel('all')" id="vlvl-all" class="vlvl-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-blue text-white shadow-sm">
+                        Tous (<span id="vcount-all">0</span>)
+                    </button>
+                    <button onclick="setVerbLevel('A1-A2')" id="vlvl-A1-A2" class="vlvl-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-slateBg text-brand-slateDark border border-brand-borderLight hover:border-brand-blue">
+                        Débutant A1-A2 (<span id="vcount-a1">0</span>)
+                    </button>
+                    <button onclick="setVerbLevel('B1-B2')" id="vlvl-B1-B2" class="vlvl-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-slateBg text-brand-slateDark border border-brand-borderLight hover:border-brand-blue">
+                        Intermédiaire B1-B2 (<span id="vcount-b1">0</span>)
+                    </button>
+                    <button onclick="setVerbLevel('C1')" id="vlvl-C1" class="vlvl-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-slateBg text-brand-slateDark border border-brand-borderLight hover:border-brand-blue">
+                        Avancé & Littéraire C1 (<span id="vcount-c1">0</span>)
+                    </button>
+                </div>
+
+                <!-- Recherche & Filtre de forme -->
+                <div class="flex flex-col sm:flex-row gap-3 mb-6">
+                    <div class="relative flex-grow">
+                        <input type="text" id="verb-search-input" onkeyup="renderVerbsTable()" placeholder="Rechercher un verbe en anglais ou en français (ex: abide, aller, bought, écrit...)" class="w-full pl-10 pr-4 py-3 rounded-xl border border-brand-borderLight bg-brand-slateBg focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue text-sm">
+                        <svg class="w-5 h-5 text-brand-slateMuted absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <select id="verb-pattern-select" onchange="renderVerbsTable()" class="px-4 py-3 rounded-xl border border-brand-borderLight bg-white text-sm font-semibold text-brand-slateDark focus:outline-none focus:ring-2 focus:ring-brand-blue">
+                        <option value="all">Toutes les formes</option>
+                        <option value="invariant">Invariables (Cut / Cut / Cut)</option>
+                        <option value="identical">Prétérit = Participe (Buy / Bought / Bought)</option>
+                        <option value="different">3 formes distinctes (Go / Went / Gone)</option>
+                    </select>
+                </div>
+
+                <!-- Tableau des Verbes -->
+                <div class="overflow-x-auto rounded-2xl border border-brand-borderLight">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-brand-slateBg border-b border-brand-borderLight text-xs font-extrabold uppercase tracking-wider text-brand-slateMuted">
+                                <th class="py-3.5 px-4">Base Verbale</th>
+                                <th class="py-3.5 px-4">Prétérit</th>
+                                <th class="py-3.5 px-4">Participe Passé</th>
+                                <th class="py-3.5 px-4">Traduction</th>
+                                <th class="py-3.5 px-4">Niveau</th>
+                                <th class="py-3.5 px-4 text-right">Audio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="verbs-tbody" class="divide-y divide-brand-borderLight text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VUE 4 : TEST DE NIVEAU CECRL (15 QUESTIONS)                         -->
+        <!-- =================================================================== -->
+        <section id="view-test" class="app-view hidden fade-in">
+            <div class="max-w-3xl mx-auto bg-white rounded-3xl border border-brand-borderLight p-6 sm:p-10 shadow-sm">
+                <div id="test-intro-box" class="text-center space-y-5 py-6">
+                    <span class="inline-block px-3.5 py-1 rounded-full bg-brand-blueLight text-brand-blue text-xs font-bold uppercase tracking-wider">Évaluation CECRL</span>
+                    <h1 class="text-3xl font-black text-brand-slateDark">Quel est votre niveau d'anglais ?</h1>
+                    <p class="text-sm sm:text-base text-brand-slateMuted max-w-xl mx-auto leading-relaxed">
+                        Répondez à 15 questions progressives couvrant les temps, les modaux, les prépositions et la syntaxe. Obtenez immédiatement votre estimation (A1 à C1) et vos fiches à réviser.
+                    </p>
+                    <button onclick="startLevelTest()" class="bg-brand-blue hover:bg-brand-blueDark text-white font-bold px-8 py-4 rounded-2xl shadow-sm transition-all">
+                        Commencer le test (15 questions)
+                    </button>
+                </div>
+
+                <div id="test-quiz-box" class="hidden space-y-6">
+                    <div class="flex items-center justify-between text-xs font-bold text-brand-slateMuted">
+                        <span>Question <span id="tq-num" class="text-brand-blue">1</span> sur 15</span>
+                        <span id="tq-badge" class="px-2.5 py-1 rounded-lg bg-brand-slateBg border border-brand-borderLight text-brand-slateDark">Niveau A1</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div id="tq-progress" class="h-full bg-brand-blue transition-all duration-300" style="width: 6%"></div>
+                    </div>
+                    <h2 id="tq-question" class="text-xl font-extrabold text-brand-slateDark pt-2"></h2>
+                    <div id="tq-options" class="space-y-3"></div>
+                </div>
+
+                <div id="test-result-box" class="hidden text-center space-y-6 py-4">
+                    <div class="w-20 h-20 rounded-3xl bg-brand-blue text-white flex items-center justify-center text-2xl font-black mx-auto shadow-md" id="tr-cefr">B1</div>
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-black text-brand-slateDark" id="tr-title">Niveau Intermédiaire</h2>
+                        <p class="text-sm text-brand-slateMuted mt-1">Vous avez obtenu <strong id="tr-score" class="text-brand-blue">0</strong> bonnes réponses sur 15.</p>
+                    </div>
+                    <p class="text-sm text-brand-slateDark bg-brand-slateBg p-5 rounded-2xl border border-brand-borderLight max-w-xl mx-auto" id="tr-advice"></p>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <button onclick="startLevelTest()" class="px-5 py-3 rounded-xl border border-brand-borderLight text-sm font-bold text-brand-slateDark hover:bg-brand-slateBg">Refaire le test</button>
+                        <button onclick="navigateTo('lessons')" class="px-6 py-3 rounded-xl bg-brand-red text-white text-sm font-bold hover:bg-brand-redDark">Réviser les fiches de cours</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VUE 5 : MINI-JEU DU COFFRE MYSTÈRE                                  -->
+        <!-- =================================================================== -->
+        <section id="view-game" class="app-view hidden fade-in">
+            <div class="max-w-2xl mx-auto bg-white rounded-3xl border border-brand-borderLight p-6 sm:p-10 shadow-sm text-center space-y-6">
+                <div>
+                    <span class="inline-block px-3.5 py-1 rounded-full bg-brand-redLight text-brand-red text-xs font-bold uppercase tracking-wider">Jeu de Vocabulaire</span>
+                    <h1 class="text-3xl font-black text-brand-slateDark mt-2">Le Coffre Mystère</h1>
+                    <p class="text-sm text-brand-slateMuted mt-1">Devinez le mot anglais caché grâce à sa définition avant d'épuiser vos 6 essais.</p>
+                </div>
+
+                <div class="bg-brand-slateBg border border-brand-borderLight rounded-2xl p-5">
+                    <p class="text-xs font-bold uppercase tracking-wider text-brand-blue mb-1">Indice / Définition</p>
+                    <p id="game-hint" class="text-base font-bold text-brand-slateDark"></p>
+                </div>
+
+                <!-- Lettres du mot -->
+                <div id="game-word-slots" class="flex flex-wrap justify-center gap-2 py-2"></div>
+
+                <!-- Essais restants -->
+                <div class="text-xs font-bold text-brand-slateMuted">
+                    Essais restants : <span id="game-lives" class="text-brand-red text-base">6</span> / 6
+                </div>
+
+                <!-- Clavier virtuel A-Z -->
+                <div id="game-keyboard" class="flex flex-wrap justify-center gap-1.5 max-w-lg mx-auto"></div>
+
+                <div id="game-status-banner" class="hidden p-4 rounded-2xl font-bold text-sm"></div>
+
+                <button onclick="initMysteryGame()" class="bg-brand-slateDark hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl text-sm transition-colors">
+                    Nouveau mot mystère
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- PIED DE PAGE                                                            -->
+    <!-- ======================================================================= -->
+    <footer class="bg-white border-t border-brand-borderLight mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-brand-slateMuted">
+            <div class="flex items-center gap-2">
+                <span class="font-black text-brand-slateDark text-sm">Anglais<span class="text-brand-blue">Facile</span> <span class="text-brand-red">2.0</span></span>
+                <span>— Refonte moderne, rapide et 100% responsive.</span>
+            </div>
+            <div class="flex items-center gap-4 font-semibold">
+                <button onclick="navigateTo('lessons')" class="hover:text-brand-blue">18 Fiches</button>
+                <button onclick="navigateTo('verbs')" class="hover:text-brand-blue">146 Verbes Irréguliers</button>
+                <button onclick="navigateTo('test')" class="hover:text-brand-blue">Test CECRL</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================================================================= -->
+    <!-- JAVASCRIPT APPLICATIF COMPLET & SANS ERREUR                             -->
+    <!-- ======================================================================= -->
+    <script>
+        // ---------------------------------------------------------------------
+        // 1. UTILITAIRES : AUDIO TTS, TOASTS & NORMALISATION DE RECHERCHE
+        // ---------------------------------------------------------------------
+        function speakEnglish(text) {
+            try {
+                if (!('speechSynthesis' in window)) {
+                    showToast("La synthèse vocale n'est pas supportée sur ce navigateur.", "error");
+                    return;
+                }
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-GB';
+                utterance.rate = 0.92;
+                window.speechSynthesis.speak(utterance);
+            } catch (e) {
+                showToast("Impossible de lire l'audio pour le moment.", "error");
+            }
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            const bgClass = type === 'success' ? 'bg-brand-blue text-white' :
+                            type === 'error' ? 'bg-brand-red text-white' :
+                            'bg-brand-slateDark text-white';
+            toast.className = `${bgClass} px-4 py-3 rounded-2xl shadow-lg text-xs font-bold flex items-center gap-2 fade-in`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3200);
+        }
+
+        function normalizeStr(str) {
+            return (str || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim();
+        }
+
+        // ---------------------------------------------------------------------
+        // 2. NAVIGATION SPA & ÉTAT DE PROGRESSION
+        // ---------------------------------------------------------------------
+        function navigateTo(viewName) {
+            document.querySelectorAll('.app-view').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            const target = document.getElementById('view-' + viewName);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-nav') === viewName) {
+                    btn.classList.add('bg-brand-blue', 'text-white', 'shadow-sm');
+                    btn.classList.remove('text-brand-slateDark', 'hover:bg-white');
+                } else {
+                    btn.classList.remove('bg-brand-blue', 'text-white', 'shadow-sm');
+                    btn.classList.add('text-brand-slateDark', 'hover:bg-white');
+                }
+            });
+
+            if (viewName === 'lessons') {
+                closeLessonReader();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function executeHomeSearch() {
+            const val = document.getElementById('home-quick-search').value.trim();
+            navigateTo('lessons');
+            const input = document.getElementById('lesson-search-input');
+            input.value = val;
+            filterLessons();
+        }
+
+        // ---------------------------------------------------------------------
+        // 3. BASE DE DONNÉES COMPLÈTE DES 18 FICHES FIDÈLES À ANGLAISFACILE
+        // ---------------------------------------------------------------------
+        const lessonsData = [
+            {
+                id: "present-simple-continuous",
+                num: "Fiche #01",
+                title: "Présent Simple ou Présent en BE + -ING ?",
+                category: "Temps & Conjugaison",
+                level: "A1-A2",
+                keywords: "present simple continuous be ing habitude action en cours verite generale always now",
+                summary: "Distinguer l'habitude ou la vérité générale (Présent simple) de l'action en cours au moment où l'on parle (BE + -ING).",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-6 rounded-2xl bg-brand-blueLight/60 border border-blue-200 space-y-3">
+                            <h3 class="text-lg font-extrabold text-brand-blueDark">1. Le Présent Simple (Base verbale + -s à he/she/it)</h3>
+                            <p class="text-sm text-brand-slateDark">Il exprime une <strong>habitude</strong>, une <strong>vérité générale</strong>, un goût ou une caractéristique permanente.</p>
+                            <p class="text-xs text-brand-slateMuted">Marqueurs fréquents : <em>always, often, usually, sometimes, never, every day</em>. Auxiliaire : <strong>DO / DOES</strong>.</p>
+                            <div class="bg-white p-3.5 rounded-xl border border-blue-100 flex items-center justify-between">
+                                <span class="text-sm font-semibold">"Water <strong>boils</strong> at 100 degrees."</span>
+                                <button onclick="speakEnglish('Water boils at 100 degrees.')" class="px-2.5 py-1 rounded-lg bg-brand-blueLight text-brand-blue text-xs font-bold hover:bg-brand-blue hover:text-white">🔊 Écouter</button>
+                            </div>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-brand-redLight/60 border border-red-200 space-y-3">
+                            <h3 class="text-lg font-extrabold text-brand-red">2. Le Présent en BE + -ING (Am/Is/Are + V-ing)</h3>
+                            <p class="text-sm text-brand-slateDark">Il décrit une <strong>action en cours de déroulement</strong> sous nos yeux, ou une situation temporaire.</p>
+                            <p class="text-xs text-brand-slateMuted">Marqueurs : <em>now, right now, at the moment, Look!, Listen!</em> Attention : les verbes d'état (<em>like, know, want, understand</em>) refusent -ING.</p>
+                            <div class="bg-white p-3.5 rounded-xl border border-red-100 flex items-center justify-between">
+                                <span class="text-sm font-semibold">"Listen! Someone <strong>is playing</strong> the piano."</span>
+                                <button onclick="speakEnglish('Listen! Someone is playing the piano.')" class="px-2.5 py-1 rounded-lg bg-brand-redLight text-brand-red text-xs font-bold hover:bg-brand-red hover:text-white">🔊 Écouter</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "Look outside! It ", suffix: " heavily right now.", options: ["rains", "is raining", "rain"], correct: "is raining", explanation: "'Look!' et 'right now' indiquent une action en cours : présent en BE + -ING." },
+                    { type: "select", prefix: "My father ", suffix: " to work by train every morning.", options: ["go", "is going", "goes"], correct: "goes", explanation: "'Every morning' marque une habitude : présent simple avec -es à la 3e personne." },
+                    { type: "select", prefix: "I ", suffix: " what you mean, please explain again.", options: ["am not understanding", "don't understand", "doesn't understand"], correct: "don't understand", explanation: "'Understand' est un verbe d'état : il s'emploie au présent simple avec 'don't'." },
+                    { type: "select", prefix: "Be quiet! The baby ", suffix: ".", options: ["sleeps", "sleep", "is sleeping"], correct: "is sleeping", explanation: "Action en cours au moment où l'on demande le silence : 'is sleeping'." },
+                    { type: "input", prefix: "Where ", suffix: " your sister live? (auxiliaire)", correct: "does", placeholder: "auxiliaire...", explanation: "Question au présent simple avec un sujet singulier (your sister) : 'does'." }
+                ]
+            },
+            {
+                id: "preterit-vs-present-perfect",
+                num: "Fiche #02",
+                title: "Prétérit Simple vs Present Perfect",
+                category: "Temps & Conjugaison",
+                level: "B1-B2",
+                keywords: "preterit simple present perfect have has participe passe date bilan already yet just ever never",
+                summary: "La règle essentielle pour choisir entre le passé révolu daté (Prétérit) et le bilan relié au présent (Present Perfect).",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-6 rounded-2xl bg-brand-blueLight/60 border border-blue-200 space-y-3">
+                            <h3 class="text-lg font-extrabold text-brand-blueDark">1. Le Prétérit Simple (Passé révolu)</h3>
+                            <p class="text-sm text-brand-slateDark">L'action est <strong>terminée et coupée du présent</strong>. Le moment passé est daté ou connu.</p>
+                            <p class="text-xs text-brand-slateMuted">Marqueurs : <em>yesterday, last week, in 2019, two days ago, when I was a child</em>.</p>
+                            <div class="bg-white p-3.5 rounded-xl border border-blue-100 flex items-center justify-between">
+                                <span class="text-sm font-semibold">"I <strong>visited</strong> London three years ago."</span>
+                                <button onclick="speakEnglish('I visited London three years ago.')" class="px-2.5 py-1 rounded-lg bg-brand-blueLight text-brand-blue text-xs font-bold hover:bg-brand-blue hover:text-white">🔊 Écouter</button>
+                            </div>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-brand-redLight/60 border border-red-200 space-y-3">
+                            <h3 class="text-lg font-extrabold text-brand-red">2. Le Present Perfect (Have/Has + Participe Passé)</h3>
+                            <p class="text-sm text-brand-slateDark">Il établit un <strong>lien entre le passé et le présent</strong> : bilan, résultat visible maintenant, ou expérience de vie.</p>
+                            <p class="text-xs text-brand-slateMuted">Marqueurs : <em>already, yet, just, ever, never, for, since, so far</em>.</p>
+                            <div class="bg-white p-3.5 rounded-xl border border-red-100 flex items-center justify-between">
+                                <span class="text-sm font-semibold">"I <strong>have lost</strong> my keys!"</span>
+                                <button onclick="speakEnglish('I have lost my keys!')" class="px-2.5 py-1 rounded-lg bg-brand-redLight text-brand-red text-xs font-bold hover:bg-brand-red hover:text-white">🔊 Écouter</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "Shakespeare ", suffix: " many famous plays.", options: ["has written", "wrote", "writes"], correct: "wrote", explanation: "Shakespeare est décédé : action révolue coupée du présent -> Prétérit ('wrote')." },
+                    { type: "select", prefix: "I ", suffix: " never been to Australia in my life.", options: ["was", "did", "have"], correct: "have", explanation: "Bilan d'expérience de vie avec 'never' -> Present Perfect ('have')." },
+                    { type: "select", prefix: "We ", suffix: " a great movie at the cinema last night.", options: ["saw", "have seen", "seen"], correct: "saw", explanation: "'Last night' est un marqueur de passé daté -> Prétérit ('saw')." },
+                    { type: "select", prefix: "Look! Someone ", suffix: " the window!", options: ["broke", "has broken", "breaks"], correct: "has broken", explanation: "Conséquence visible au présent ('Look!') -> Present Perfect ('has broken')." },
+                    { type: "input", prefix: "Have you ", suffix: " finished your homework? (déjà)", correct: "already", placeholder: "adverbe...", explanation: "'Already' se place entre l'auxiliaire 'have' et le participe passé." }
+                ]
+            },
+            {
+                id: "had-better",
+                num: "Fiche #03",
+                title: "Had better vs Should : donner un conseil",
+                category: "Grammaire",
+                level: "B1-B2",
+                keywords: "had better should conseil recommandation urgence risque",
+                summary: "Savoir quand utiliser SHOULD (conseil général) et HAD BETTER (recommandation urgente avec conséquence négative).",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-6 rounded-2xl bg-brand-blueLight/60 border border-blue-200 space-y-3">
+                            <h3 class="text-lg font-extrabold text-brand-blueDark">1. SHOULD (Conseil général)</h3>
+                            <p class="text-sm text-brand-slateDark"><strong>Should + base verbale</strong> sert à donner un avis ou un conseil amical d'ordre général.</p>
+                            <div class="bg-white p-3.5 rounded-xl border border-blue-100 flex items-center justify-between">
+                                <span class="text-sm font-semibold">"You <strong>should</strong> drink more water."</span>
+                                <button onclick="speakEnglish('You should drink more water.')" class="px-2.5 py-1 rounded-lg bg-brand-blueLight text-brand-blue text-xs font-bold hover:bg-brand-blue hover:text-white">🔊 Écouter</button>
+                            </div>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-brand-redLight/60 border border-red-200 space-y-3">
+                            <h3 class="text-lg font-extrabold text-brand-red">2. HAD BETTER (Urgence / Avertissement)</h3>
+                            <p class="text-sm text-brand-slateDark"><strong>Had better ('d better) + base verbale</strong> s'emploie dans une situation précise : si on ne suit pas le conseil, il y aura un problème !</p>
+                            <div class="bg-white p-3.5 rounded-xl border border-red-100 flex items-center justify-between">
+                                <span class="text-sm font-semibold">"You<strong>'d better</strong> hurry up, or you'll miss the train!"</span>
+                                <button onclick="speakEnglish('You had better hurry up, or you will miss the train!')" class="px-2.5 py-1 rounded-lg bg-brand-redLight text-brand-red text-xs font-bold hover:bg-brand-red hover:text-white">🔊 Écouter</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-brand-slateDark text-white text-xs">
+                        <strong>Piège classique :</strong> La forme négative est <strong>had better not</strong> (jamais <em>hadn't better</em>) et il n'est jamais suivi de <em>to</em>.
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "The sky is very dark. We ", suffix: " take an umbrella.", options: ["had better", "shouldn't", "had better to"], correct: "had better", explanation: "Situation précise avec risque immédiat : 'had better' sans 'to'." },
+                    { type: "select", prefix: "In my opinion, everyone ", suffix: " learn a foreign language.", options: ["should", "had better", "should to"], correct: "should", explanation: "Opinion générale : 'should'." },
+                    { type: "select", prefix: "You ", suffix: " be late for your job interview!", options: ["had better not", "hadn't better", "had better not to"], correct: "had better not", explanation: "Négation correcte : 'had better not' + base verbale." },
+                    { type: "input", prefix: "Your phone battery is at 1%. You'd ", suffix: " charge it now!", correct: "better", placeholder: "mot...", explanation: "Contraction 'You'd better' = You had better." },
+                    { type: "select", prefix: "You look exhausted. You ", suffix: " work so late tonight.", options: ["shouldn't", "had better", "hadn't better"], correct: "shouldn't", explanation: "Conseil bienveillant négatif : 'shouldn't'." }
+                ]
+            },
+            {
+                id: "for-since-ago",
+                num: "Fiche #04",
+                title: "For, Since et Ago : exprimer le temps",
+                category: "Grammaire",
+                level: "A1-A2",
+                keywords: "for since ago duree point de depart il y a depuis pendant",
+                summary: "Ne plus jamais confondre la durée (For), le point de départ (Since) et l'antériorité dans le passé (Ago).",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-5 rounded-2xl bg-brand-blueLight/50 border border-blue-200 space-y-2">
+                            <h3 class="font-extrabold text-brand-blueDark">FOR + Durée</h3>
+                            <p class="text-xs text-brand-slateDark">Exprime une longueur de temps (pendant / depuis + durée chiffrée).</p>
+                            <div class="bg-white p-3 rounded-xl border border-blue-100 text-xs font-semibold flex justify-between items-center">
+                                <span>"I have lived here <strong>for</strong> 10 years."</span>
+                                <button onclick="speakEnglish('I have lived here for ten years.')" class="text-brand-blue">🔊</button>
+                            </div>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-brand-redLight/50 border border-red-200 space-y-2">
+                            <h3 class="font-extrabold text-brand-red">SINCE + Point de départ</h3>
+                            <p class="text-xs text-brand-slateDark">Indique le moment précis où l'action a débuté (depuis + date ou événement).</p>
+                            <div class="bg-white p-3 rounded-xl border border-red-100 text-xs font-semibold flex justify-between items-center">
+                                <span>"I have lived here <strong>since</strong> 2016."</span>
+                                <button onclick="speakEnglish('I have lived here since 2016.')" class="text-brand-red">🔊</button>
+                            </div>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-slate-100 border border-slate-200 space-y-2">
+                            <h3 class="font-extrabold text-brand-slateDark">Durée + AGO</h3>
+                            <p class="text-xs text-brand-slateDark">Signifie « il y a » et s'emploie toujours avec le <strong>Prétérit</strong>, placé à la fin.</p>
+                            <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs font-semibold flex justify-between items-center">
+                                <span>"I arrived two hours <strong>ago</strong>."</span>
+                                <button onclick="speakEnglish('I arrived two hours ago.')" class="text-brand-slateDark">🔊</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "She has been waiting for the bus ", suffix: " 8 o'clock.", options: ["for", "since", "ago"], correct: "since", explanation: "8 o'clock est un point de départ précis -> 'since'." },
+                    { type: "select", prefix: "They have been married ", suffix: " twenty-five years.", options: ["for", "since", "ago"], correct: "for", explanation: "Twenty-five years est une durée -> 'for'." },
+                    { type: "select", prefix: "We bought this house five years ", suffix: ".", options: ["for", "since", "ago"], correct: "ago", explanation: "Prétérit ('bought') + durée placée avant -> 'ago' (il y a)." },
+                    { type: "select", prefix: "I haven't seen Paul ", suffix: " last Christmas.", options: ["for", "since", "ago"], correct: "since", explanation: "Last Christmas est un point de départ -> 'since'." },
+                    { type: "input", prefix: "He has worked in this company ", suffix: " six months.", correct: "for", placeholder: "for / since / ago", explanation: "Six months est une durée -> 'for'." }
+                ]
+            },
+            {
+                id: "do-does-did",
+                num: "Fiche #05",
+                title: "Les auxiliaires DO, DOES et DID",
+                category: "Temps & Conjugaison",
+                level: "A1-A2",
+                keywords: "do does did auxiliaire question negation present passe",
+                summary: "Comprendre le fonctionnement de l'auxiliaire DO pour construire les questions et les négations.",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-5 rounded-2xl bg-brand-blueLight/50 border border-blue-200 space-y-2">
+                            <h3 class="font-extrabold text-brand-blueDark">Au Présent Simple : DO / DOES</h3>
+                            <p class="text-xs text-brand-slateDark"><strong>DOES</strong> s'emploie à la 3e personne du singulier (<em>he, she, it</em>). Le verbe qui suit perd son -s final !</p>
+                            <div class="bg-white p-3 rounded-xl border border-blue-100 text-xs font-semibold flex justify-between items-center">
+                                <span>"<strong>Does</strong> she <u>like</u> tea? No, she <strong>doesn't</strong>."</span>
+                                <button onclick="speakEnglish('Does she like tea? No, she does not.')" class="text-brand-blue">🔊</button>
+                            </div>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-brand-redLight/50 border border-red-200 space-y-2">
+                            <h3 class="font-extrabold text-brand-red">Au Prétérit : DID</h3>
+                            <p class="text-xs text-brand-slateDark"><strong>DID</strong> s'emploie à toutes les personnes. Le verbe principal revient toujours à la <strong>base verbale</strong> !</p>
+                            <div class="bg-white p-3 rounded-xl border border-red-100 text-xs font-semibold flex justify-between items-center">
+                                <span>"Where <strong>did</strong> you <u>go</u> yesterday?"</span>
+                                <button onclick="speakEnglish('Where did you go yesterday?')" class="text-brand-red">🔊</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "", suffix: " your brother play tennis on Sundays?", options: ["Do", "Does", "Did"], correct: "Does", explanation: "Habitude au présent + sujet singulier ('your brother') -> 'Does'." },
+                    { type: "select", prefix: "I ", suffix: " go to the party yesterday because I was sick.", options: ["don't", "doesn't", "didn't"], correct: "didn't", explanation: "'Yesterday' indique le passé -> 'didn't'." },
+                    { type: "select", prefix: "Did you ", suffix: " the email I sent you?", options: ["received", "receive", "receives"], correct: "receive", explanation: "Après 'Did', on utilise toujours la base verbale ('receive')." },
+                    { type: "input", prefix: "Where ", suffix: " they live? (présent)", correct: "do", placeholder: "do / does / did", explanation: "Présent simple avec 'they' -> 'do'." },
+                    { type: "select", prefix: "She ", suffix: " like spicy food at all.", options: ["don't", "doesn't", "isn't"], correct: "doesn't", explanation: "Négation au présent simple à la 3e personne du singulier -> 'doesn't'." }
+                ]
+            },
+            {
+                id: "modaux-can-must-may",
+                num: "Fiche #06",
+                title: "Les Modaux : Can, Could, Must, May, Might",
+                category: "Grammaire",
+                level: "A1-A2",
+                keywords: "modaux can could must have to may might capacite obligation interdiction permission",
+                summary: "Maîtriser les règles des auxiliaires modaux (invariables, suivis de la base verbale sans to) et leurs sens.",
+                content: `
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-2xl bg-brand-blueLight/50 border border-blue-200 text-xs text-brand-blueDark">
+                            <strong>Règles d'or :</strong> Les modaux sont <strong>invariables</strong> (jamais de -s), n'utilisent jamais <em>do/did</em>, et sont suivis de la <strong>base verbale sans to</strong>.
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                            <div class="p-4 rounded-xl border border-brand-borderLight bg-brand-slateBg">
+                                <strong class="text-brand-blue text-sm block mb-1">CAN / COULD</strong>
+                                Capacité ou permission (<em>I can swim</em>). <em>Could</em> exprime le passé ou une demande polie.
+                            </div>
+                            <div class="p-4 rounded-xl border border-brand-borderLight bg-brand-slateBg">
+                                <strong class="text-brand-red text-sm block mb-1">MUST / MUSTN'T</strong>
+                                Obligation forte (<em>must</em>) ou interdiction stricte (<em>mustn't</em>). L'absence d'obligation se dit <em>don't have to</em>.
+                            </div>
+                            <div class="p-4 rounded-xl border border-brand-borderLight bg-brand-slateBg">
+                                <strong class="text-brand-slateDark text-sm block mb-1">MAY / MIGHT</strong>
+                                Permission formelle (<em>May I come in?</em>) ou éventualité incertaine (<em>It might rain</em>).
+                            </div>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "You ", suffix: " smoke in the hospital, it is strictly forbidden.", options: ["don't have to", "mustn't", "might not"], correct: "mustn't", explanation: "Interdiction stricte -> 'mustn't'." },
+                    { type: "select", prefix: "Tomorrow is Sunday, so I ", suffix: " wake up early.", options: ["mustn't", "don't have to", "can't"], correct: "don't have to", explanation: "Absence d'obligation -> 'don't have to'." },
+                    { type: "select", prefix: "Take a jacket, it ", suffix: " get cold tonight.", options: ["might", "must to", "cans"], correct: "might", explanation: "Probabilité incertaine -> 'might'." },
+                    { type: "select", prefix: "When I was five, I ", suffix: " already swim.", options: ["can", "could", "may"], correct: "could", explanation: "Capacité dans le passé -> 'could'." },
+                    { type: "input", prefix: "", suffix: " I open the window, please? (permission très polie)", correct: "May", placeholder: "Modal...", explanation: "'May I...?' est la formule polie par excellence." }
+                ]
+            },
+            {
+                id: "comparatif-superlatif",
+                num: "Fiche #07",
+                title: "Le Comparatif et le Superlatif",
+                category: "Grammaire",
+                level: "A1-A2",
+                keywords: "comparatif superlatif more than the most er est adjectifs longs courts irreguliers",
+                summary: "Comparer deux éléments ou exprimer le degré suprême selon la longueur de l'adjectif.",
+                content: `
+                    <div class="overflow-x-auto rounded-2xl border border-brand-borderLight">
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead class="bg-brand-slateBg border-b border-brand-borderLight uppercase text-brand-slateMuted">
+                                <tr>
+                                    <th class="p-3.5">Adjectif</th>
+                                    <th class="p-3.5">Comparatif (+ ... que)</th>
+                                    <th class="p-3.5">Superlatif (le plus ...)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-brand-borderLight">
+                                <tr>
+                                    <td class="p-3.5 font-bold">Court (1 syllabe ou 2 en -y)</td>
+                                    <td class="p-3.5 text-brand-blue font-semibold">adj + -ER than (<em>taller than</em>)</td>
+                                    <td class="p-3.5 text-brand-red font-semibold">the + adj + -EST (<em>the tallest</em>)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3.5 font-bold">Long (2 syllabes et +)</td>
+                                    <td class="p-3.5 text-brand-blue font-semibold">more + adj + than (<em>more expensive than</em>)</td>
+                                    <td class="p-3.5 text-brand-red font-semibold">the most + adj (<em>the most expensive</em>)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3.5 font-bold">Irréguliers</td>
+                                    <td class="p-3.5">Good → <strong>better than</strong><br>Bad → <strong>worse than</strong></td>
+                                    <td class="p-3.5">Good → <strong>the best</strong><br>Bad → <strong>the worst</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "London is ", suffix: " than Manchester.", options: ["more big", "bigger", "the biggest"], correct: "bigger", explanation: "Adjectif court (consonne-voyelle-consonne) : on double le g -> 'bigger'." },
+                    { type: "select", prefix: "This is ", suffix: " movie I have ever seen!", options: ["the worse", "worst", "the worst"], correct: "the worst", explanation: "Superlatif irrégulier de 'bad' -> 'the worst'." },
+                    { type: "select", prefix: "A Ferrari is ", suffix: " than a bicycle.", options: ["more expensive", "expensiver", "most expensive"], correct: "more expensive", explanation: "Adjectif long -> 'more expensive'." },
+                    { type: "select", prefix: "Mount Everest is ", suffix: " mountain in the world.", options: ["higher", "the highest", "the most high"], correct: "the highest", explanation: "Superlatif d'un adjectif court -> 'the highest'." },
+                    { type: "input", prefix: "Your English is much ", suffix: " than last year! (comparatif de good)", correct: "better", placeholder: "comparatif...", explanation: "Comparatif irrégulier de 'good' -> 'better'." }
+                ]
+            },
+            {
+                id: "pronoms-relatifs",
+                num: "Fiche #08",
+                title: "Les Pronoms Relatifs : Who, Which, Whose, Where",
+                category: "Grammaire",
+                level: "B1-B2",
+                keywords: "pronoms relatifs who which that whose where antecedent humain chose possession",
+                summary: "Relier deux propositions en choisissant le pronom relatif adapté à l'antécédent.",
+                content: `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                        <div class="p-4 rounded-2xl bg-brand-blueLight/50 border border-blue-200">
+                            <strong class="text-brand-blueDark">WHO</strong> : Antécédent <strong>humain</strong>.<br>
+                            <span class="text-xs text-brand-slateMuted">"The man <strong>who</strong> lives next door is a doctor."</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-brand-redLight/50 border border-red-200">
+                            <strong class="text-brand-red">WHICH</strong> : Antécédent <strong>chose ou animal</strong>.<br>
+                            <span class="text-xs text-brand-slateMuted">"The book <strong>which</strong> is on the table is mine."</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200">
+                            <strong class="text-brand-slateDark">WHOSE</strong> : Exprime la <strong>possession</strong> (« dont le / la »).<br>
+                            <span class="text-xs text-brand-slateMuted">"The girl <strong>whose</strong> car was stolen is crying."</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200">
+                            <strong class="text-brand-slateDark">WHERE</strong> : Exprime le <strong>lieu</strong> (« où »).<br>
+                            <span class="text-xs text-brand-slateMuted">"The hotel <strong>where</strong> we stayed was amazing."</span>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "The woman ", suffix: " called you is my aunt.", options: ["which", "who", "whose"], correct: "who", explanation: "Antécédent humain ('The woman') -> 'who'." },
+                    { type: "select", prefix: "That's the boy ", suffix: " father is a famous actor.", options: ["who", "which", "whose"], correct: "whose", explanation: "Possession ('le père du garçon') -> 'whose'." },
+                    { type: "select", prefix: "I lost the watch ", suffix: " you gave me for my birthday.", options: ["who", "which", "where"], correct: "which", explanation: "Antécédent objet ('the watch') -> 'which'." },
+                    { type: "select", prefix: "This is the restaurant ", suffix: " we first met.", options: ["which", "where", "who"], correct: "where", explanation: "Complément de lieu -> 'where'." },
+                    { type: "input", prefix: "A vegetarian is someone ", suffix: " doesn't eat meat.", correct: "who", placeholder: "pronom...", explanation: "'Someone' désigne une personne -> 'who'." }
+                ]
+            },
+            {
+                id: "some-any-no",
+                num: "Fiche #09",
+                title: "Some, Any, No et leurs composés",
+                category: "Grammaire",
+                level: "A1-A2",
+                keywords: "some any no something anything nothing somebody anybody nobody",
+                summary: "Employer le bon quantifieur dans les phrases affirmatives, négatives, interrogatives et offres polies.",
+                content: `
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <div class="p-4 rounded-2xl bg-brand-blueLight/50 border border-blue-200">
+                            <strong class="text-brand-blueDark">SOME (somebody, something)</strong> : Phrases <strong>affirmatives</strong> et questions de <strong>politesse / offre</strong> (<em>Would you like some tea?</em>).
+                        </div>
+                        <div class="p-4 rounded-2xl bg-brand-redLight/50 border border-red-200">
+                            <strong class="text-brand-red">ANY (anybody, anything)</strong> : Phrases <strong>négatives (avec not)</strong> et <strong>questions ordinaires</strong>.
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200">
+                            <strong class="text-brand-slateDark">NO (nobody, nothing)</strong> : Avec un <strong>verbe affirmatif</strong> pour exprimer une quantité nulle (pas de double négation).
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "I'm thirsty. Could I have ", suffix: " water, please?", options: ["any", "some", "no"], correct: "some", explanation: "Demande polie -> 'some' même dans une question." },
+                    { type: "select", prefix: "There isn't ", suffix: " milk left in the fridge.", options: ["some", "any", "no"], correct: "any", explanation: "Phrase négative ('isn't') -> 'any'." },
+                    { type: "select", prefix: "The room was empty, there was ", suffix: " inside.", options: ["anybody", "nobody", "somebody"], correct: "nobody", explanation: "Verbe affirmatif ('was') -> composé négatif 'nobody'." },
+                    { type: "select", prefix: "Did you buy ", suffix: " interesting at the market?", options: ["something", "anything", "nothing"], correct: "anything", explanation: "Question ordinaire -> 'anything'." },
+                    { type: "input", prefix: "I have ", suffix: " idea where he went! (aucune idée)", correct: "no", placeholder: "some / any / no", explanation: "Verbe affirmatif + sens négatif -> 'no idea'." }
+                ]
+            },
+            {
+                id: "prepositions-in-on-at",
+                num: "Fiche #10",
+                title: "Les Prépositions : IN, ON et AT",
+                category: "Grammaire",
+                level: "A1-A2",
+                keywords: "prepositions in on at temps lieu heure jour mois annee",
+                summary: "La pyramide logique d'AnglaisFacile pour maîtriser IN (large), ON (intermédiaire) et AT (précis).",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="p-4 rounded-2xl bg-brand-blueLight/50 border border-blue-200 space-y-1.5">
+                            <h4 class="font-extrabold text-brand-blueDark text-sm">IN (Large)</h4>
+                            <p><strong>Temps :</strong> Années (<em>in 2026</em>), mois (<em>in July</em>), saisons, <em>in the morning</em>.</p>
+                            <p><strong>Lieu :</strong> Pays, villes, espaces clos (<em>in France, in London, in the car</em>).</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-brand-redLight/50 border border-red-200 space-y-1.5">
+                            <h4 class="font-extrabold text-brand-red text-sm">ON (Intermédiaire)</h4>
+                            <p><strong>Temps :</strong> Jours (<em>on Monday</em>), dates précises (<em>on July 14th</em>).</p>
+                            <p><strong>Lieu :</strong> Surfaces, rues, transports (<em>on the table, on the bus</em>).</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200 space-y-1.5">
+                            <h4 class="font-extrabold text-brand-slateDark text-sm">AT (Point précis)</h4>
+                            <p><strong>Temps :</strong> Heures précises (<em>at 8:30 pm</em>), <em>at night, at the weekend</em>.</p>
+                            <p><strong>Lieu :</strong> Lieux précis (<em>at home, at school, at the station</em>).</p>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "The meeting starts ", suffix: " 9:30 AM.", options: ["in", "on", "at"], correct: "at", explanation: "Heure précise -> 'at'." },
+                    { type: "select", prefix: "My birthday is ", suffix: " October.", options: ["in", "on", "at"], correct: "in", explanation: "Mois seul -> 'in'." },
+                    { type: "select", prefix: "We always have a big family dinner ", suffix: " Christmas Day.", options: ["in", "on", "at"], correct: "on", explanation: "Jour précis -> 'on'." },
+                    { type: "select", prefix: "She lives ", suffix: " Paris, near the Eiffel Tower.", options: ["in", "on", "at"], correct: "in", explanation: "Ville -> 'in'." },
+                    { type: "input", prefix: "Please leave the keys ", suffix: " the kitchen table.", correct: "on", placeholder: "in / on / at", explanation: "Sur une surface -> 'on'." }
+                ]
+            },
+            {
+                id: "futur-will-going-to",
+                num: "Fiche #11",
+                title: "Le Futur : Will vs Be going to",
+                category: "Temps & Conjugaison",
+                level: "A1-A2",
+                keywords: "futur will going to decision spontanee intention prediction",
+                summary: "Différencier la décision prise sur le moment (Will) du projet déjà planifié ou de l'évidence (Be going to).",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                        <div class="p-5 rounded-2xl bg-brand-blueLight/50 border border-blue-200 space-y-2">
+                            <h4 class="font-extrabold text-brand-blueDark">WILL + Base verbale</h4>
+                            <p>• <strong>Décision spontanée</strong> prise sur le vif : <em>"The phone is ringing. I'll answer it!"</em></p>
+                            <p>• <strong>Promesse, offre ou prédiction</strong> personnelle (<em>I think it will rain</em>).</p>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-brand-redLight/50 border border-red-200 space-y-2">
+                            <h4 class="font-extrabold text-brand-red">BE GOING TO + Base verbale</h4>
+                            <p>• <strong>Intention déjà décidée</strong> à l'avance : <em>"I'm going to buy a new car next month."</em></p>
+                            <p>• <strong>Prédiction avec indice visible</strong> : <em>"Look at those dark clouds! It's going to rain."</em></p>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "« Oh, I forgot my wallet! » — « Don't worry, I ", suffix: " pay for dinner. »", options: ["am going to", "will", "go to"], correct: "will", explanation: "Décision spontanée -> 'will'." },
+                    { type: "select", prefix: "Watch out! That glass is on the edge, it ", suffix: " fall!", options: ["will", "is going to", "falls"], correct: "is going to", explanation: "Indice visuel immédiat -> 'is going to'." },
+                    { type: "select", prefix: "We have already bought the tickets. We ", suffix: " fly to Spain next Friday.", options: ["will", "are going to", "going to"], correct: "are going to", explanation: "Projet déjà planifié -> 'are going to'." },
+                    { type: "select", prefix: "I promise I ", suffix: " tell anyone your secret.", options: ["won't", "am not going to", "don't"], correct: "won't", explanation: "Promesse -> 'won't'." },
+                    { type: "input", prefix: "I think humans ", suffix: " live on Mars one day.", correct: "will", placeholder: "futur...", explanation: "Prédiction personnelle après 'I think' -> 'will'." }
+                ]
+            },
+            {
+                id: "voix-passive",
+                num: "Fiche #12",
+                title: "La Voix Passive (Passive Voice)",
+                category: "Grammaire",
+                level: "B1-B2",
+                keywords: "voix passive passive voice be participe passe by agent",
+                summary: "Construire la voix passive en conjuguant BE au temps de la phrase active suivi du participe passé.",
+                content: `
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <p>Formule : <strong>Sujet passif + BE (conjugué au temps voulu) + Participe Passé (+ BY + agent)</strong>.</p>
+                        <div class="p-4 rounded-2xl bg-brand-slateBg border border-brand-borderLight space-y-1.5">
+                            <p>• <strong>Présent :</strong> People speak English here → English <strong>is spoken</strong> here.</p>
+                            <p>• <strong>Prétérit :</strong> Eiffel built the tower → The tower <strong>was built</strong> by Eiffel.</p>
+                            <p>• <strong>Present Perfect :</strong> Someone has stolen my bike → My bike <strong>has been stolen</strong>.</p>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "The Mona Lisa ", suffix: " by Leonardo da Vinci.", options: ["painted", "was painted", "is painted"], correct: "was painted", explanation: "Action passée au passif -> 'was painted'." },
+                    { type: "select", prefix: "Millions of smartphones ", suffix: " every year.", options: ["are sold", "were sold", "sell"], correct: "are sold", explanation: "Fait habituel présent au passif -> 'are sold'." },
+                    { type: "select", prefix: "The new bridge ", suffix: " next year.", options: ["will build", "will be built", "is built"], correct: "will be built", explanation: "Futur passif -> 'will be built'." },
+                    { type: "select", prefix: "This novel was written ", suffix: " Charles Dickens.", options: ["from", "with", "by"], correct: "by", explanation: "L'agent est introduit par 'by'." },
+                    { type: "input", prefix: "English is ", suffix: " all over the world. (participe passé de speak)", correct: "spoken", placeholder: "participe...", explanation: "Participe passé de 'speak' -> 'spoken'." }
+                ]
+            },
+            {
+                id: "conditionnel-if-clauses",
+                num: "Fiche #13",
+                title: "Le Conditionnel (If Clauses : Types 1, 2, 3)",
+                category: "Temps & Conjugaison",
+                level: "B1-B2",
+                keywords: "conditionnel if clauses would had participe passe hypothese",
+                summary: "Maîtriser la concordance des temps dans les propositions hypothétiques en IF.",
+                content: `
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <div class="p-4 rounded-2xl bg-brand-blueLight/50 border border-blue-200">
+                            <strong class="text-brand-blueDark">Type 1 (Probable) :</strong> If + Présent → <strong>Will + BV</strong> (<em>If it rains, I will stay home.</em>)
+                        </div>
+                        <div class="p-4 rounded-2xl bg-brand-redLight/50 border border-red-200">
+                            <strong class="text-brand-red">Type 2 (Irréel du présent) :</strong> If + Prétérit (<em>were</em>) → <strong>Would + BV</strong> (<em>If I were rich, I would travel.</em>)
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200">
+                            <strong class="text-brand-slateDark">Type 3 (Irréel du passé) :</strong> If + Past Perfect → <strong>Would have + PP</strong> (<em>If you had studied, you would have passed.</em>)
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "If I ", suffix: " rich, I would buy a big boat.", options: ["am", "were", "would be"], correct: "were", explanation: "Type 2 : prétérit modal 'were' après 'If'." },
+                    { type: "select", prefix: "If she ", suffix: " harder, she will succeed.", options: ["works", "worked", "will work"], correct: "works", explanation: "Type 1 : présent simple après 'If'." },
+                    { type: "select", prefix: "If they had left earlier, they ", suffix: " the train.", options: ["would catch", "would have caught", "caught"], correct: "would have caught", explanation: "Type 3 : 'had left' -> 'would have caught'." },
+                    { type: "select", prefix: "What would you do if you ", suffix: " a ghost?", options: ["see", "saw", "seen"], correct: "saw", explanation: "Type 2 : prétérit 'saw'." },
+                    { type: "input", prefix: "If you heat ice, it ", suffix: ". (présent de melt)", correct: "melts", placeholder: "verbe...", explanation: "Vérité générale (Type 0) : présent simple ('melts')." }
+                ]
+            },
+            {
+                id: "much-many-little-few",
+                num: "Fiche #14",
+                title: "Quantifieurs : Much, Many, Little, Few",
+                category: "Grammaire",
+                level: "A1-A2",
+                keywords: "much many a lot of little few denombrable indenombrable quantite",
+                summary: "Distinguer les noms dénombrables (books, friends) et indénombrables (water, time, money).",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                        <div class="p-4 rounded-2xl bg-brand-blueLight/50 border border-blue-200 space-y-1">
+                            <h4 class="font-extrabold text-brand-blueDark">Noms Dénombrables (Pluriel)</h4>
+                            <p>• Beaucoup : <strong>MANY</strong> (questions/négations) ou <strong>A LOT OF</strong>.</p>
+                            <p>• Peu : <strong>FEW</strong> (insuffisant) / <strong>A FEW</strong> (quelques-uns).</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-brand-redLight/50 border border-red-200 space-y-1">
+                            <h4 class="font-extrabold text-brand-red">Noms Indénombrables (Singulier)</h4>
+                            <p>• Beaucoup : <strong>MUCH</strong> (questions/négations) ou <strong>A LOT OF</strong>.</p>
+                            <p>• Peu : <strong>LITTLE</strong> (insuffisant) / <strong>A LITTLE</strong> (un peu).</p>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "How ", suffix: " brothers and sisters do you have?", options: ["much", "many", "little"], correct: "many", explanation: "Nom dénombrable pluriel -> 'How many'." },
+                    { type: "select", prefix: "Hurry up! We don't have ", suffix: " time.", options: ["many", "much", "few"], correct: "much", explanation: "'Time' est indénombrable -> 'much'." },
+                    { type: "select", prefix: "There are only ", suffix: " apples left in the basket.", options: ["a little", "a few", "much"], correct: "a few", explanation: "'Apples' est dénombrable pluriel -> 'a few'." },
+                    { type: "select", prefix: "Could you put ", suffix: " sugar in my tea, please?", options: ["a few", "many", "a little"], correct: "a little", explanation: "'Sugar' est indénombrable -> 'a little'." },
+                    { type: "input", prefix: "How ", suffix: " does this t-shirt cost?", correct: "much", placeholder: "much / many", explanation: "L'argent ('money') est indénombrable -> 'How much'." }
+                ]
+            },
+            {
+                id: "used-to",
+                num: "Fiche #15",
+                title: "Used to vs Be used to / Get used to",
+                category: "Grammaire",
+                level: "B1-B2",
+                keywords: "used to be used to get used to habitude passee etre habitue",
+                summary: "Distinguer l'habitude passée révolue (Used to + BV) du fait d'être habitué à (Be used to + V-ing).",
+                content: `
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <div class="p-4 rounded-2xl bg-brand-blueLight/50 border border-blue-200">
+                            <strong class="text-brand-blueDark">USED TO + Base Verbale :</strong> Habitude passée révolue (« autrefois, je... »). Ex: <em>I used to smoke.</em>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-brand-redLight/50 border border-red-200">
+                            <strong class="text-brand-red">BE USED TO + V-ING / Nom :</strong> Être habitué à. Ex: <em>I am used to driving on the left.</em>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200">
+                            <strong class="text-brand-slateDark">GET USED TO + V-ING / Nom :</strong> S'habituer progressivement à. Ex: <em>You will get used to waking up early.</em>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "When I was a child, I ", suffix: " play video games all day.", options: ["was used to", "used to", "get used to"], correct: "used to", explanation: "Habitude révolue de l'enfance -> 'used to'." },
+                    { type: "select", prefix: "She is a nurse, so she is used to ", suffix: " at night.", options: ["work", "working", "worked"], correct: "working", explanation: "Après 'be used to', le verbe prend -ING -> 'working'." },
+                    { type: "select", prefix: "It took me a few months to ", suffix: " the cold weather in Canada.", options: ["used to", "get used to", "use to"], correct: "get used to", explanation: "Action progressive de s'habituer -> 'get used to'." },
+                    { type: "select", prefix: "Did you ", suffix: " live in Paris before moving here?", options: ["used to", "use to", "being used to"], correct: "use to", explanation: "Avec 'Did', 'used' perd son -d -> 'use to'." },
+                    { type: "input", prefix: "I am used to ", suffix: " spicy food now. (eating)", correct: "eating", placeholder: "verbe en -ing...", explanation: "'Be used to' + V-ing -> 'eating'." }
+                ]
+            },
+            {
+                id: "faux-amis",
+                num: "Fiche #16",
+                title: "Les Faux-Amis indispensables",
+                category: "Vocabulaire & Pièges",
+                level: "B1-B2",
+                keywords: "faux amis false friends actually library sensible eventually attend deceive",
+                summary: "Éviter les contresens classiques entre des mots anglais et français qui se ressemblent.",
+                content: `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3.5 rounded-xl bg-brand-slateBg border border-brand-borderLight"><strong class="text-brand-red">Actually</strong> = En réalité / En fait (Actuellement = <em>Currently</em>)</div>
+                        <div class="p-3.5 rounded-xl bg-brand-slateBg border border-brand-borderLight"><strong class="text-brand-blue">Library</strong> = Bibliothèque (Librairie = <em>Bookshop</em>)</div>
+                        <div class="p-3.5 rounded-xl bg-brand-slateBg border border-brand-borderLight"><strong class="text-brand-red">Sensible</strong> = Raisonnable / Censé (Sensible = <em>Sensitive</em>)</div>
+                        <div class="p-3.5 rounded-xl bg-brand-slateBg border border-brand-borderLight"><strong class="text-brand-blue">Eventually</strong> = Finalement / À la fin (Éventuellement = <em>Possibly</em>)</div>
+                        <div class="p-3.5 rounded-xl bg-brand-slateBg border border-brand-borderLight"><strong class="text-brand-red">Attend</strong> = Assister à (Attendre = <em>Wait for</em>)</div>
+                        <div class="p-3.5 rounded-xl bg-brand-slateBg border border-brand-borderLight"><strong class="text-brand-blue">Deceive</strong> = Tromper / Duper (Décevoir = <em>Disappoint</em>)</div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "I went to the ", suffix: " to borrow three novels for free.", options: ["bookshop", "library", "librairie"], correct: "library", explanation: "Bibliothèque = 'library'." },
+                    { type: "select", prefix: "He looks angry, but ", suffix: " he is a very kind person.", options: ["currently", "actually", "eventually"], correct: "actually", explanation: "En réalité / en fait = 'actually'." },
+                    { type: "select", prefix: "Be careful with what you say to Emma, she is very ", suffix: ".", options: ["sensible", "sensitive", "sensational"], correct: "sensitive", explanation: "Sensible (émotif) = 'sensitive'." },
+                    { type: "select", prefix: "Over 500 guests will ", suffix: " the conference tomorrow.", options: ["wait", "attend", "assist"], correct: "attend", explanation: "Assister à = 'attend'." },
+                    { type: "input", prefix: "After hours of searching, we ", suffix: " found the lost dog. (finalement)", correct: "eventually", placeholder: "adverbe...", explanation: "Finalement = 'eventually'." }
+                ]
+            },
+            {
+                id: "question-tags",
+                num: "Fiche #17",
+                title: "Les Question Tags (N'est-ce pas ?)",
+                category: "Grammaire",
+                level: "B1-B2",
+                keywords: "question tags n est ce pas reprise auxiliaire pronom aren t i",
+                summary: "Construire la petite question finale en reprenant l'auxiliaire et en inversant la polarité (+ / -).",
+                content: `
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <p>Règle : <strong>1. On reprend l'auxiliaire</strong> (ou <em>do/does/did</em>) + pronom sujet. <strong>2. On inverse le signe</strong> (+ devient -, et - devient +).</p>
+                        <div class="p-4 rounded-2xl bg-brand-slateBg border border-brand-borderLight space-y-1">
+                            <p>• You are French, <strong>aren't you?</strong></p>
+                            <p>• She doesn't like fish, <strong>does she?</strong></p>
+                            <p>• They went to Spain, <strong>didn't they?</strong></p>
+                            <p>• Exception célèbre : I am right, <strong>aren't I?</strong></p>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "Paul can speak German, ", suffix: "?", options: ["can he", "can't he", "doesn't he"], correct: "can't he", explanation: "Modal 'can' affirmatif -> reprise négative 'can't he'." },
+                    { type: "select", prefix: "You haven't seen my glasses, ", suffix: "?", options: ["have you", "haven't you", "did you"], correct: "have you", explanation: "'Haven't' négatif -> 'have you'." },
+                    { type: "select", prefix: "She arrived late this morning, ", suffix: "?", options: ["wasn't she", "didn't she", "doesn't she"], correct: "didn't she", explanation: "Verbe au prétérit -> 'didn't she'." },
+                    { type: "select", prefix: "I am invited to the party, ", suffix: "?", options: ["amn't I", "aren't I", "don't I"], correct: "aren't I", explanation: "Exception : le tag de 'I am' est 'aren't I?'." },
+                    { type: "input", prefix: "It's a beautiful day, ", suffix: " it?", correct: "isn't", placeholder: "auxiliaire...", explanation: "'It is' -> 'isn't it?'." }
+                ]
+            },
+            {
+                id: "make-vs-do",
+                num: "Fiche #18",
+                title: "Make vs Do : ne plus les confondre",
+                category: "Vocabulaire & Pièges",
+                level: "A1-A2",
+                keywords: "make do faire creer fabriquer tache menagere erreur",
+                summary: "Les collocations essentielles avec MAKE (créer/fabriquer) et DO (accomplir une tâche/activité).",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="p-4 rounded-2xl bg-brand-blueLight/50 border border-blue-200 space-y-1">
+                            <h4 class="font-extrabold text-brand-blueDark text-sm">DO (Action, tâche)</h4>
+                            <p>• <strong>do</strong> homework / an exercise (faire ses devoirs)</p>
+                            <p>• <strong>do</strong> the housework / the dishes (faire le ménage / la vaisselle)</p>
+                            <p>• <strong>do</strong> the shopping / your best (faire les courses / de son mieux)</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-brand-redLight/50 border border-red-200 space-y-1">
+                            <h4 class="font-extrabold text-brand-red text-sm">MAKE (Fabriquer, produire)</h4>
+                            <p>• <strong>make</strong> a mistake (faire une erreur)</p>
+                            <p>• <strong>make</strong> a cake / coffee / dinner (préparer un repas)</p>
+                            <p>• <strong>make</strong> a decision / noise / money (décider / faire du bruit)</p>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    { type: "select", prefix: "Don't worry, everybody ", suffix: " mistakes when learning a language.", options: ["does", "makes", "do"], correct: "makes", explanation: "Collocation fixe : 'make a mistake'." },
+                    { type: "select", prefix: "Can you please ", suffix: " the dishes after dinner?", options: ["make", "do", "made"], correct: "do", explanation: "Tâche ménagère : 'do the dishes'." },
+                    { type: "select", prefix: "Stop ", suffix: " so much noise! I'm trying to sleep.", options: ["doing", "making", "make"], correct: "making", explanation: "Expression fixe : 'make noise'." },
+                    { type: "select", prefix: "We need to ", suffix: " a decision before Friday.", options: ["do", "make", "did"], correct: "make", explanation: "Expression fixe : 'make a decision'." },
+                    { type: "input", prefix: "I always ", suffix: " my homework in the afternoon.", correct: "do", placeholder: "do / make", explanation: "Devoirs : 'do homework'." }
+                ]
+            }
+        ];
+
+        let activeLesson = null;
+        let validatedLessonIds = [];
+        try {
+            validatedLessonIds = JSON.parse(localStorage.getItem('af2_validated_lessons') || '[]');
+        } catch (e) {
+            validatedLessonIds = [];
+        }
+
+        function refreshHeaderProgress() {
+            const el = document.getElementById('header-progress-count');
+            if (el) el.textContent = `${validatedLessonIds.length}/${lessonsData.length}`;
+        }
+
+        function filterLessons() {
+            const rawQuery = document.getElementById('lesson-search-input').value;
+            const query = normalizeStr(rawQuery);
+            const levelFilter = document.getElementById('lesson-level-select').value;
+            const catFilter = document.getElementById('lesson-cat-select').value;
+
+            const clearBtn = document.getElementById('lesson-search-clear');
+            if (rawQuery.length > 0) clearBtn.classList.remove('hidden');
+            else clearBtn.classList.add('hidden');
+
+            const filtered = lessonsData.filter(lesson => {
+                const haystack = normalizeStr(lesson.title + ' ' + lesson.summary + ' ' + lesson.keywords + ' ' + lesson.category);
+                const matchesText = !query || haystack.includes(query);
+                const matchesLevel = levelFilter === 'all' || lesson.level === levelFilter;
+                const matchesCat = catFilter === 'all' || lesson.category === catFilter;
+                return matchesText && matchesLevel && matchesCat;
+            });
+
+            document.getElementById('lessons-result-count').textContent = `${filtered.length} fiche${filtered.length > 1 ? 's' : ''} trouvée${filtered.length > 1 ? 's' : ''}`;
+            renderLessonsCards(filtered);
+        }
+
+        function resetLessonFilters() {
+            document.getElementById('lesson-search-input').value = '';
+            document.getElementById('lesson-level-select').value = 'all';
+            document.getElementById('lesson-cat-select').value = 'all';
+            filterLessons();
+        }
+
+        function renderLessonsCards(list) {
+            const grid = document.getElementById('lessons-grid');
+            grid.innerHTML = '';
+
+            if (list.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white rounded-3xl border border-brand-borderLight p-10 text-center space-y-3">
+                        <p class="text-base font-extrabold text-brand-slateDark">Aucune fiche de cours trouvée</p>
+                        <p class="text-xs text-brand-slateMuted">Essayez un autre mot-clé (ex: Prétérit, Modaux, For, Passive, Faux-amis...).</p>
+                        <button onclick="resetLessonFilters()" class="px-4 py-2 rounded-xl bg-brand-blue text-white text-xs font-bold">Afficher toutes les fiches</button>
+                    </div>
+                `;
+                return;
+            }
+
+            list.forEach(lesson => {
+                const isValidated = validatedLessonIds.includes(lesson.id);
+                const lvlStyle = lesson.level === 'A1-A2' ? 'bg-brand-blueLight text-brand-blue' : 'bg-brand-redLight text-brand-red';
+
+                const card = document.createElement('div');
+                card.onclick = () => openLesson(lesson.id);
+                card.className = "group bg-white rounded-3xl border border-brand-borderLight hover:border-brand-blue p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="text-xs font-bold text-brand-slateMuted">${lesson.num} • ${lesson.category}</span>
+                            ${isValidated ? '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-bold">✓ Validée</span>' : ''}
+                        </div>
+                        <h3 class="text-lg font-extrabold text-brand-slateDark group-hover:text-brand-blue transition-colors mb-2">${lesson.title}</h3>
+                        <p class="text-xs text-brand-slateMuted leading-relaxed mb-4">${lesson.summary}</p>
+                    </div>
+                    <div class="pt-4 border-t border-brand-borderLight flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold ${lvlStyle}">Niveau ${lesson.level}</span>
+                        <span class="text-xs font-bold text-brand-blue group-hover:translate-x-1 transition-transform">Ouvrir la fiche →</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openLesson(lessonId) {
+            const found = lessonsData.find(l => l.id === lessonId);
+            if (!found) return;
+            activeLesson = found;
+
+            document.querySelectorAll('.app-view').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById('view-lessons').classList.remove('hidden');
+            document.getElementById('lessons-catalog-panel').classList.add('hidden');
+            document.getElementById('lesson-reader-panel').classList.remove('hidden');
+
+            document.getElementById('reader-cat').textContent = found.category;
+            document.getElementById('reader-title-crumb').textContent = found.title;
+
+            document.getElementById('lesson-reader-body').innerHTML = `
+                <div class="border-b border-brand-borderLight pb-6">
+                    <div class="flex flex-wrap items-center gap-2 mb-3">
+                        <span class="px-3 py-1 rounded-full bg-brand-blue text-white text-xs font-bold">${found.num}</span>
+                        <span class="px-3 py-1 rounded-full bg-brand-slateBg border border-brand-borderLight text-brand-slateDark text-xs font-bold">Niveau ${found.level}</span>
+                        <span class="px-3 py-1 rounded-full bg-brand-redLight text-brand-red text-xs font-bold">${found.category}</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-black text-brand-slateDark">${found.title}</h1>
+                    <p class="text-sm text-brand-slateMuted mt-2">${found.summary}</p>
+                </div>
+                ${found.content}
+            `;
+
+            renderCurrentLessonExercise();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closeLessonReader() {
+            document.getElementById('lesson-reader-panel').classList.add('hidden');
+            document.getElementById('lessons-catalog-panel').classList.remove('hidden');
+            filterLessons();
+        }
+
+        function renderCurrentLessonExercise() {
+            if (!activeLesson) return;
+            const container = document.getElementById('lesson-exercise-list');
+            container.innerHTML = '';
+
+            const list = activeLesson.exercises;
+            document.getElementById('exo-score-val').textContent = '0';
+            document.getElementById('exo-total-val').textContent = list.length;
+            document.getElementById('exo-score-bar').style.width = '0%';
+
+            list.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.id = `exo-row-${idx}`;
+                row.className = "p-5 rounded-2xl border border-brand-borderLight bg-brand-slateBg/60 transition-all";
+
+                let controlHtml = '';
+                if (item.type === 'select') {
+                    const optionsHtml = item.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                    controlHtml = `
+                        <p class="text-sm sm:text-base font-semibold text-brand-slateDark leading-relaxed">
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-blue text-white text-xs font-bold mr-2">${idx + 1}</span>
+                            ${item.prefix}
+                            <select id="exo-field-${idx}" class="mx-1 px-3 py-1.5 rounded-xl border border-brand-borderLight bg-white font-bold text-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue">
+                                <option value="">-- choisir --</option>
+                                ${optionsHtml}
+                            </select>
+                            ${item.suffix}
+                        </p>
+                    `;
+                } else {
+                    controlHtml = `
+                        <p class="text-sm sm:text-base font-semibold text-brand-slateDark leading-relaxed">
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-blue text-white text-xs font-bold mr-2">${idx + 1}</span>
+                            ${item.prefix}
+                            <input type="text" id="exo-field-${idx}" placeholder="${item.placeholder || '...'}" class="mx-1 w-36 px-3 py-1 rounded-xl border border-brand-borderLight bg-white font-bold text-brand-blue text-center focus:outline-none focus:ring-2 focus:ring-brand-blue">
+                            ${item.suffix}
+                        </p>
+                    `;
+                }
+
+                row.innerHTML = `
+                    ${controlHtml}
+                    <div id="exo-msg-${idx}" class="hidden mt-3 ml-8 p-3 rounded-xl text-xs font-semibold"></div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function gradeCurrentLessonExercise() {
+            if (!activeLesson) return;
+            const list = activeLesson.exercises;
+            let score = 0;
+
+            list.forEach((item, idx) => {
+                const field = document.getElementById(`exo-field-${idx}`);
+                const userVal = (field ? field.value : '').trim();
+                const row = document.getElementById(`exo-row-${idx}`);
+                const msg = document.getElementById(`exo-msg-${idx}`);
+
+                msg.classList.remove('hidden', 'bg-blue-50', 'text-brand-blueDark', 'bg-red-50', 'text-brand-red');
+                row.classList.remove('border-brand-borderLight', 'border-brand-blue', 'border-brand-red', 'bg-brand-blueLight/20', 'bg-brand-redLight/20');
+
+                if (userVal.toLowerCase() === item.correct.toLowerCase()) {
+                    score++;
+                    row.classList.add('border-brand-blue', 'bg-brand-blueLight/20');
+                    msg.classList.add('bg-blue-50', 'text-brand-blueDark');
+                    msg.innerHTML = `✅ Exact ! ${item.explanation}`;
+                } else {
+                    row.classList.add('border-brand-red', 'bg-brand-redLight/20');
+                    msg.classList.add('bg-red-50', 'text-brand-red');
+                    msg.innerHTML = `❌ Réponse attendue : « ${item.correct} ». ${item.explanation}`;
+                }
+            });
+
+            document.getElementById('exo-score-val').textContent = score;
+            document.getElementById('exo-score-bar').style.width = `${(score / list.length) * 100}%`;
+
+            if (score === list.length) {
+                showToast(`Bravo ! Score parfait (${score}/${list.length}) — Fiche validée !`, "success");
+                if (!validatedLessonIds.includes(activeLesson.id)) {
+                    validatedLessonIds.push(activeLesson.id);
+                    try {
+                        localStorage.setItem('af2_validated_lessons', JSON.stringify(validatedLessonIds));
+                    } catch (e) {}
+                    refreshHeaderProgress();
+                }
+            } else {
+                showToast(`Correction terminée : ${score}/${list.length} bonnes réponses.`, "info");
+            }
+        }
+
+        // ---------------------------------------------------------------------
+        // 4. LISTE EXHAUSTIVE DES 146 VERBES IRRÉGULIERS PAR NIVEAU
+        // ---------------------------------------------------------------------
+        const irregularVerbsData = [
+            // A1-A2 (45 essentiels)
+            { base: "be", past: "was / were", participle: "been", fr: "être", pattern: "different", level: "A1-A2" },
+            { base: "become", past: "became", participle: "become", fr: "devenir", pattern: "different", level: "A1-A2" },
+            { base: "begin", past: "began", participle: "begun", fr: "commencer", pattern: "different", level: "A1-A2" },
+            { base: "break", past: "broke", participle: "broken", fr: "casser", pattern: "different", level: "A1-A2" },
+            { base: "bring", past: "brought", participle: "brought", fr: "apporter", pattern: "identical", level: "A1-A2" },
+            { base: "build", past: "built", participle: "built", fr: "construire", pattern: "identical", level: "A1-A2" },
+            { base: "buy", past: "bought", participle: "bought", fr: "acheter", pattern: "identical", level: "A1-A2" },
+            { base: "choose", past: "chose", participle: "chosen", fr: "choisir", pattern: "different", level: "A1-A2" },
+            { base: "come", past: "came", participle: "come", fr: "venir", pattern: "different", level: "A1-A2" },
+            { base: "cost", past: "cost", participle: "cost", fr: "coûter", pattern: "invariant", level: "A1-A2" },
+            { base: "cut", past: "cut", participle: "cut", fr: "couper", pattern: "invariant", level: "A1-A2" },
+            { base: "do", past: "did", participle: "done", fr: "faire", pattern: "different", level: "A1-A2" },
+            { base: "drink", past: "drank", participle: "drunk", fr: "boire", pattern: "different", level: "A1-A2" },
+            { base: "drive", past: "drove", participle: "driven", fr: "conduire", pattern: "different", level: "A1-A2" },
+            { base: "eat", past: "ate", participle: "eaten", fr: "manger", pattern: "different", level: "A1-A2" },
+            { base: "fall", past: "fell", participle: "fallen", fr: "tomber", pattern: "different", level: "A1-A2" },
+            { base: "feel", past: "felt", participle: "felt", fr: "sentir / ressentir", pattern: "identical", level: "A1-A2" },
+            { base: "find", past: "found", participle: "found", fr: "trouver", pattern: "identical", level: "A1-A2" },
+            { base: "fly", past: "flew", participle: "flown", fr: "voler (dans les airs)", pattern: "different", level: "A1-A2" },
+            { base: "forget", past: "forgot", participle: "forgotten", fr: "oublier", pattern: "different", level: "A1-A2" },
+            { base: "get", past: "got", participle: "got / gotten", fr: "obtenir / devenir", pattern: "identical", level: "A1-A2" },
+            { base: "give", past: "gave", participle: "given", fr: "donner", pattern: "different", level: "A1-A2" },
+            { base: "go", past: "went", participle: "gone", fr: "aller", pattern: "different", level: "A1-A2" },
+            { base: "have", past: "had", participle: "had", fr: "avoir", pattern: "identical", level: "A1-A2" },
+            { base: "hear", past: "heard", participle: "heard", fr: "entendre", pattern: "identical", level: "A1-A2" },
+            { base: "keep", past: "kept", participle: "kept", fr: "garder", pattern: "identical", level: "A1-A2" },
+            { base: "know", past: "knew", participle: "known", fr: "savoir / connaître", pattern: "different", level: "A1-A2" },
+            { base: "learn", past: "learnt / learned", participle: "learnt / learned", fr: "apprendre", pattern: "identical", level: "A1-A2" },
+            { base: "leave", past: "left", participle: "left", fr: "quitter / partir", pattern: "identical", level: "A1-A2" },
+            { base: "lose", past: "lost", participle: "lost", fr: "perdre", pattern: "identical", level: "A1-A2" },
+            { base: "make", past: "made", participle: "made", fr: "fabriquer / faire", pattern: "identical", level: "A1-A2" },
+            { base: "meet", past: "met", participle: "met", fr: "rencontrer", pattern: "identical", level: "A1-A2" },
+            { base: "pay", past: "paid", participle: "paid", fr: "payer", pattern: "identical", level: "A1-A2" },
+            { base: "put", past: "put", participle: "put", fr: "mettre / poser", pattern: "invariant", level: "A1-A2" },
+            { base: "read", past: "read", participle: "read", fr: "lire", pattern: "invariant", level: "A1-A2" },
+            { base: "run", past: "ran", participle: "run", fr: "courir", pattern: "different", level: "A1-A2" },
+            { base: "say", past: "said", participle: "said", fr: "dire", pattern: "identical", level: "A1-A2" },
+            { base: "see", past: "saw", participle: "seen", fr: "voir", pattern: "different", level: "A1-A2" },
+            { base: "send", past: "sent", participle: "sent", fr: "envoyer", pattern: "identical", level: "A1-A2" },
+            { base: "sing", past: "sang", participle: "sung", fr: "chanter", pattern: "different", level: "A1-A2" },
+            { base: "sit", past: "sat", participle: "sat", fr: "être assis", pattern: "identical", level: "A1-A2" },
+            { base: "sleep", past: "slept", participle: "slept", fr: "dormir", pattern: "identical", level: "A1-A2" },
+            { base: "speak", past: "spoke", participle: "spoken", fr: "parler", pattern: "different", level: "A1-A2" },
+            { base: "take", past: "took", participle: "taken", fr: "prendre", pattern: "different", level: "A1-A2" },
+            { base: "write", past: "wrote", participle: "written", fr: "écrire", pattern: "different", level: "A1-A2" },
+
+            // B1-B2 (53 courants)
+            { base: "beat", past: "beat", participle: "beaten", fr: "battre", pattern: "different", level: "B1-B2" },
+            { base: "bend", past: "bent", participle: "bent", fr: "plier / courber", pattern: "identical", level: "B1-B2" },
+            { base: "bet", past: "bet", participle: "bet", fr: "parier", pattern: "invariant", level: "B1-B2" },
+            { base: "bite", past: "bit", participle: "bitten", fr: "mordre", pattern: "different", level: "B1-B2" },
+            { base: "bleed", past: "bled", participle: "bled", fr: "saigner", pattern: "identical", level: "B1-B2" },
+            { base: "blow", past: "blew", participle: "blown", fr: "souffler", pattern: "different", level: "B1-B2" },
+            { base: "burn", past: "burnt / burned", participle: "burnt / burned", fr: "brûler", pattern: "identical", level: "B1-B2" },
+            { base: "catch", past: "caught", participle: "caught", fr: "attraper", pattern: "identical", level: "B1-B2" },
+            { base: "deal", past: "dealt", participle: "dealt", fr: "traiter / distribuer", pattern: "identical", level: "B1-B2" },
+            { base: "dig", past: "dug", participle: "dug", fr: "creuser", pattern: "identical", level: "B1-B2" },
+            { base: "draw", past: "drew", participle: "drawn", fr: "dessiner / tirer", pattern: "different", level: "B1-B2" },
+            { base: "dream", past: "dreamt / dreamed", participle: "dreamt / dreamed", fr: "rêver", pattern: "identical", level: "B1-B2" },
+            { base: "feed", past: "fed", participle: "fed", fr: "nourrir", pattern: "identical", level: "B1-B2" },
+            { base: "fight", past: "fought", participle: "fought", fr: "se battre / combattre", pattern: "identical", level: "B1-B2" },
+            { base: "forgive", past: "forgave", participle: "forgiven", fr: "pardonner", pattern: "different", level: "B1-B2" },
+            { base: "freeze", past: "froze", participle: "frozen", fr: "geler", pattern: "different", level: "B1-B2" },
+            { base: "grow", past: "grew", participle: "grown", fr: "grandir / cultiver", pattern: "different", level: "B1-B2" },
+            { base: "hang", past: "hung", participle: "hung", fr: "pendre / accrocher", pattern: "identical", level: "B1-B2" },
+            { base: "hide", past: "hid", participle: "hidden", fr: "cacher", pattern: "different", level: "B1-B2" },
+            { base: "hit", past: "hit", participle: "hit", fr: "frapper", pattern: "invariant", level: "B1-B2" },
+            { base: "hold", past: "held", participle: "held", fr: "tenir", pattern: "identical", level: "B1-B2" },
+            { base: "hurt", past: "hurt", participle: "hurt", fr: "blesser / faire mal", pattern: "invariant", level: "B1-B2" },
+            { base: "lay", past: "laid", participle: "laid", fr: "poser à plat / pondre", pattern: "identical", level: "B1-B2" },
+            { base: "lead", past: "led", participle: "led", fr: "mener / diriger", pattern: "identical", level: "B1-B2" },
+            { base: "lend", past: "lent", participle: "lent", fr: "prêter", pattern: "identical", level: "B1-B2" },
+            { base: "let", past: "let", participle: "let", fr: "laisser / louer", pattern: "invariant", level: "B1-B2" },
+            { base: "lie", past: "lay", participle: "lain", fr: "être allongé", pattern: "different", level: "B1-B2" },
+            { base: "light", past: "lit / lighted", participle: "lit / lighted", fr: "allumer / éclairer", pattern: "identical", level: "B1-B2" },
+            { base: "mean", past: "meant", participle: "meant", fr: "signifier / vouloir dire", pattern: "identical", level: "B1-B2" },
+            { base: "ride", past: "rode", participle: "ridden", fr: "monter (vélo, cheval)", pattern: "different", level: "B1-B2" },
+            { base: "ring", past: "rang", participle: "rung", fr: "sonner", pattern: "different", level: "B1-B2" },
+            { base: "rise", past: "rose", participle: "risen", fr: "se lever / augmenter", pattern: "different", level: "B1-B2" },
+            { base: "sell", past: "sold", participle: "sold", fr: "vendre", pattern: "identical", level: "B1-B2" },
+            { base: "set", past: "set", participle: "set", fr: "fixer / placer", pattern: "invariant", level: "B1-B2" },
+            { base: "shake", past: "shook", participle: "shaken", fr: "secouer", pattern: "different", level: "B1-B2" },
+            { base: "shine", past: "shone", participle: "shone", fr: "briller", pattern: "identical", level: "B1-B2" },
+            { base: "shoot", past: "shot", participle: "shot", fr: "tirer / filmer", pattern: "identical", level: "B1-B2" },
+            { base: "show", past: "showed", participle: "shown", fr: "montrer", pattern: "different", level: "B1-B2" },
+            { base: "shut", past: "shut", participle: "shut", fr: "fermer", pattern: "invariant", level: "B1-B2" },
+            { base: "sink", past: "sank", participle: "sunk", fr: "couler", pattern: "different", level: "B1-B2" },
+            { base: "smell", past: "smelt / smelled", participle: "smelt / smelled", fr: "sentir (odeur)", pattern: "identical", level: "B1-B2" },
+            { base: "spend", past: "spent", participle: "spent", fr: "dépenser / passer (temps)", pattern: "identical", level: "B1-B2" },
+            { base: "stand", past: "stood", participle: "stood", fr: "être debout", pattern: "identical", level: "B1-B2" },
+            { base: "steal", past: "stole", participle: "stolen", fr: "voler (dérober)", pattern: "different", level: "B1-B2" },
+            { base: "swim", past: "swam", participle: "swum", fr: "nager", pattern: "different", level: "B1-B2" },
+            { base: "teach", past: "taught", participle: "taught", fr: "enseigner", pattern: "identical", level: "B1-B2" },
+            { base: "tell", past: "told", participle: "told", fr: "dire / raconter", pattern: "identical", level: "B1-B2" },
+            { base: "think", past: "thought", participle: "thought", fr: "penser", pattern: "identical", level: "B1-B2" },
+            { base: "throw", past: "threw", participle: "thrown", fr: "jeter / lancer", pattern: "different", level: "B1-B2" },
+            { base: "understand", past: "understood", participle: "understood", fr: "comprendre", pattern: "identical", level: "B1-B2" },
+            { base: "wake", past: "woke", participle: "woken", fr: "se réveiller", pattern: "different", level: "B1-B2" },
+            { base: "wear", past: "wore", participle: "worn", fr: "porter (vêtement)", pattern: "different", level: "B1-B2" },
+            { base: "win", past: "won", participle: "won", fr: "gagner", pattern: "identical", level: "B1-B2" },
+
+            // C1 (50 avancés et littéraires)
+            { base: "abide", past: "abode / abided", participle: "abode / abided", fr: "respecter / demeurer", pattern: "identical", level: "C1" },
+            { base: "arise", past: "arose", participle: "arisen", fr: "survenir / s'élever", pattern: "different", level: "C1" },
+            { base: "awake", past: "awoke", participle: "awoken", fr: "s'éveiller", pattern: "different", level: "C1" },
+            { base: "bear", past: "bore", participle: "borne", fr: "supporter / porter", pattern: "different", level: "C1" },
+            { base: "bind", past: "bound", participle: "bound", fr: "lier / relier", pattern: "identical", level: "C1" },
+            { base: "breed", past: "bred", participle: "bred", fr: "élever (animaux)", pattern: "identical", level: "C1" },
+            { base: "broadcast", past: "broadcast", participle: "broadcast", fr: "diffuser (TV/radio)", pattern: "invariant", level: "C1" },
+            { base: "burst", past: "burst", participle: "burst", fr: "éclater", pattern: "invariant", level: "C1" },
+            { base: "cast", past: "cast", participle: "cast", fr: "jeter / distribuer (rôle)", pattern: "invariant", level: "C1" },
+            { base: "cling", past: "clung", participle: "clung", fr: "s'accrocher", pattern: "identical", level: "C1" },
+            { base: "creep", past: "crept", participle: "crept", fr: "ramper / se glisser", pattern: "identical", level: "C1" },
+            { base: "dwell", past: "dwelt", participle: "dwelt", fr: "habiter / résider", pattern: "identical", level: "C1" },
+            { base: "flee", past: "fled", participle: "fled", fr: "fuir", pattern: "identical", level: "C1" },
+            { base: "fling", past: "flung", participle: "flung", fr: "lancer violemment", pattern: "identical", level: "C1" },
+            { base: "forbid", past: "forbade", participle: "forbidden", fr: "interdire", pattern: "different", level: "C1" },
+            { base: "forecast", past: "forecast", participle: "forecast", fr: "prévoir (météo)", pattern: "invariant", level: "C1" },
+            { base: "forsake", past: "forsook", participle: "forsaken", fr: "abandonner", pattern: "different", level: "C1" },
+            { base: "grind", past: "ground", participle: "ground", fr: "moudre / broyer", pattern: "identical", level: "C1" },
+            { base: "kneel", past: "knelt", participle: "knelt", fr: "s'agenouiller", pattern: "identical", level: "C1" },
+            { base: "knit", past: "knit / knitted", participle: "knit / knitted", fr: "tricoter", pattern: "invariant", level: "C1" },
+            { base: "lean", past: "leant / leaned", participle: "leant / leaned", fr: "s'appuyer / se pencher", pattern: "identical", level: "C1" },
+            { base: "leap", past: "leapt / leaped", participle: "leapt / leaped", fr: "sauter / bondir", pattern: "identical", level: "C1" },
+            { base: "overcome", past: "overcame", participle: "overcome", fr: "surmonter / vaincre", pattern: "different", level: "C1" },
+            { base: "seek", past: "sought", participle: "sought", fr: "chercher", pattern: "identical", level: "C1" },
+            { base: "sew", past: "sewed", participle: "sewn", fr: "coudre", pattern: "different", level: "C1" },
+            { base: "shrink", past: "shrank", participle: "shrunk", fr: "rétrécir", pattern: "different", level: "C1" },
+            { base: "slide", past: "slid", participle: "slid", fr: "glisser", pattern: "identical", level: "C1" },
+            { base: "sow", past: "sowed", participle: "sown", fr: "semer", pattern: "different", level: "C1" },
+            { base: "spin", past: "spun", participle: "spun", fr: "tourner / filer", pattern: "identical", level: "C1" },
+            { base: "spit", past: "spat", participle: "spat", fr: "cracher", pattern: "identical", level: "C1" },
+            { base: "split", past: "split", participle: "split", fr: "fendre / diviser", pattern: "invariant", level: "C1" },
+            { base: "spread", past: "spread", participle: "spread", fr: "répandre / étaler", pattern: "invariant", level: "C1" },
+            { base: "spring", past: "sprang", participle: "sprung", fr: "jaillir / bondir", pattern: "different", level: "C1" },
+            { base: "stick", past: "stuck", participle: "stuck", fr: "coller / enfoncer", pattern: "identical", level: "C1" },
+            { base: "sting", past: "stung", participle: "stung", fr: "piquer (insecte)", pattern: "identical", level: "C1" },
+            { base: "stink", past: "stank", participle: "stunk", fr: "puer", pattern: "different", level: "C1" },
+            { base: "strike", past: "struck", participle: "struck", fr: "frapper / faire grève", pattern: "identical", level: "C1" },
+            { base: "swear", past: "swore", participle: "sworn", fr: "jurer", pattern: "different", level: "C1" },
+            { base: "sweep", past: "swept", participle: "swept", fr: "balayer", pattern: "identical", level: "C1" },
+            { base: "swell", past: "swelled", participle: "swollen", fr: "enfler / gonfler", pattern: "different", level: "C1" },
+            { base: "swing", past: "swung", participle: "swung", fr: "se balancer", pattern: "identical", level: "C1" },
+            { base: "tear", past: "tore", participle: "torn", fr: "déchirer", pattern: "different", level: "C1" },
+            { base: "undergo", past: "underwent", participle: "undergone", fr: "subir", pattern: "different", level: "C1" },
+            { base: "undertake", past: "undertook", participle: "undertaken", fr: "entreprendre", pattern: "different", level: "C1" },
+            { base: "upset", past: "upset", participle: "upset", fr: "bouleverser / renverser", pattern: "invariant", level: "C1" },
+            { base: "weave", past: "wove", participle: "woven", fr: "tisser", pattern: "different", level: "C1" },
+            { base: "weep", past: "wept", participle: "wept", fr: "pleurer", pattern: "identical", level: "C1" },
+            { base: "wind", past: "wound", participle: "wound", fr: "enrouler / remonter", pattern: "identical", level: "C1" },
+            { base: "withdraw", past: "withdrew", participle: "withdrawn", fr: "se retirer / retirer", pattern: "different", level: "C1" },
+            { base: "wring", past: "wrung", participle: "wrung", fr: "tordre / essorer", pattern: "identical", level: "C1" }
+        ];
+
+        let currentVerbLevel = 'all';
+        let currentVerbHideCol = 'none';
+
+        function initVerbStats() {
+            document.getElementById('vcount-all').textContent = irregularVerbsData.length;
+            document.getElementById('vcount-a1').textContent = irregularVerbsData.filter(v => v.level === 'A1-A2').length;
+            document.getElementById('vcount-b1').textContent = irregularVerbsData.filter(v => v.level === 'B1-B2').length;
+            document.getElementById('vcount-c1').textContent = irregularVerbsData.filter(v => v.level === 'C1').length;
+        }
+
+        function setVerbLevel(lvl) {
+            currentVerbLevel = lvl;
+            document.querySelectorAll('.vlvl-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-blue', 'text-white', 'shadow-sm');
+                btn.classList.add('bg-brand-slateBg', 'text-brand-slateDark', 'border', 'border-brand-borderLight');
+            });
+            const activeBtn = document.getElementById('vlvl-' + lvl);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-brand-slateBg', 'text-brand-slateDark', 'border', 'border-brand-borderLight');
+                activeBtn.classList.add('bg-brand-blue', 'text-white', 'shadow-sm');
+            }
+            renderVerbsTable();
+        }
+
+        function setVerbHideColumn(col) {
+            currentVerbHideCol = col;
+            document.querySelectorAll('.vhide-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-slateDark', 'text-white');
+                btn.classList.add('text-brand-slateDark');
+            });
+            const activeBtn = document.getElementById('vhide-' + col);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-brand-slateDark', 'text-white');
+            }
+            renderVerbsTable();
+        }
+
+        function revealCell(btn, text, colorClass) {
+            const span = document.createElement('span');
+            span.className = colorClass;
+            span.textContent = text;
+            btn.replaceWith(span);
+        }
+
+        function renderVerbsTable() {
+            const tbody = document.getElementById('verbs-tbody');
+            const query = normalizeStr(document.getElementById('verb-search-input').value);
+            const pattern = document.getElementById('verb-pattern-select').value;
+
+            const filtered = irregularVerbsData.filter(v => {
+                const hay = normalizeStr(`${v.base} ${v.past} ${v.participle} ${v.fr}`);
+                const matchesSearch = !query || hay.includes(query);
+                const matchesPattern = pattern === 'all' || v.pattern === pattern;
+                const matchesLvl = currentVerbLevel === 'all' || v.level === currentVerbLevel;
+                return matchesSearch && matchesPattern && matchesLvl;
+            });
+
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-sm text-brand-slateMuted">Aucun verbe ne correspond à votre recherche.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(v => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-brand-blueLight/30 transition-colors";
+
+                const lvlBadge = v.level === 'A1-A2' ? 'bg-brand-blueLight text-brand-blue' :
+                                 v.level === 'B1-B2' ? 'bg-slate-100 text-brand-slateDark' :
+                                 'bg-brand-redLight text-brand-red';
+
+                // Construction sécurisée des cellules sans guillemets imbriqués fragiles
+                const tdBase = document.createElement('td');
+                tdBase.className = "py-3.5 px-4 font-extrabold text-brand-slateDark";
+                tdBase.textContent = v.base;
+
+                const tdPast = document.createElement('td');
+                tdPast.className = "py-3.5 px-4";
+                if (currentVerbHideCol === 'past') {
+                    const btn = document.createElement('button');
+                    btn.className = "px-2.5 py-1 rounded-lg bg-brand-slateBg border border-brand-borderLight text-xs font-bold text-brand-slateMuted hover:border-brand-blue";
+                    btn.textContent = "Révéler";
+                    btn.onclick = () => revealCell(btn, v.past, "font-bold text-brand-blue");
+                    tdPast.appendChild(btn);
+                } else {
+                    tdPast.innerHTML = `<span class="font-bold text-brand-blue">${v.past}</span>`;
+                }
+
+                const tdPart = document.createElement('td');
+                tdPart.className = "py-3.5 px-4";
+                if (currentVerbHideCol === 'participle') {
+                    const btn = document.createElement('button');
+                    btn.className = "px-2.5 py-1 rounded-lg bg-brand-slateBg border border-brand-borderLight text-xs font-bold text-brand-slateMuted hover:border-brand-red";
+                    btn.textContent = "Révéler";
+                    btn.onclick = () => revealCell(btn, v.participle, "font-bold text-brand-red");
+                    tdPart.appendChild(btn);
+                } else {
+                    tdPart.innerHTML = `<span class="font-bold text-brand-red">${v.participle}</span>`;
+                }
+
+                const tdFr = document.createElement('td');
+                tdFr.className = "py-3.5 px-4";
+                if (currentVerbHideCol === 'fr') {
+                    const btn = document.createElement('button');
+                    btn.className = "px-2.5 py-1 rounded-lg bg-brand-slateBg border border-brand-borderLight text-xs font-bold text-brand-slateMuted hover:border-brand-slateDark";
+                    btn.textContent = "Révéler";
+                    btn.onclick = () => revealCell(btn, v.fr, "text-brand-slateMuted font-medium");
+                    tdFr.appendChild(btn);
+                } else {
+                    tdFr.innerHTML = `<span class="text-brand-slateMuted font-medium">${v.fr}</span>`;
+                }
+
+                const tdLvl = document.createElement('td');
+                tdLvl.className = "py-3.5 px-4";
+                tdLvl.innerHTML = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${lvlBadge}">${v.level}</span>`;
+
+                const tdAudio = document.createElement('td');
+                tdAudio.className = "py-3.5 px-4 text-right";
+                const audioBtn = document.createElement('button');
+                audioBtn.className = "px-2.5 py-1.5 rounded-xl bg-brand-slateBg hover:bg-brand-blue hover:text-white text-brand-slateDark text-xs font-bold transition-colors";
+                audioBtn.textContent = "🔊";
+                audioBtn.title = "Écouter les 3 formes";
+                const speechText = `${v.base}, ${v.past.split(' / ')[0]}, ${v.participle.split(' / ')[0]}`;
+                audioBtn.onclick = () => speakEnglish(speechText);
+                tdAudio.appendChild(audioBtn);
+
+                tr.append(tdBase, tdPast, tdPart, tdFr, tdLvl, tdAudio);
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ---------------------------------------------------------------------
+        // 5. TEST DE NIVEAU CECRL (15 QUESTIONS)
+        // ---------------------------------------------------------------------
+        const levelTestQuestions = [
+            { level: "A1", q: "Hello! My name ___ Thomas and I live in Lyon.", opts: ["am", "is", "are"], ans: 1 },
+            { level: "A1", q: "Where ___ your parents come from?", opts: ["do", "does", "are"], ans: 0 },
+            { level: "A1", q: "There aren't ___ apples left in the kitchen.", opts: ["some", "any", "no"], ans: 1 },
+            { level: "A2", q: "Yesterday, we ___ to the cinema and saw a great thriller.", opts: ["go", "have gone", "went"], ans: 2 },
+            { level: "A2", q: "This exercise is much ___ than the previous one.", opts: ["more easy", "easier", "easiest"], ans: 1 },
+            { level: "A2", q: "The train arrives ___ 6:45 PM.", opts: ["in", "on", "at"], ans: 2 },
+            { level: "B1", q: "I have been learning English ___ five years.", opts: ["since", "for", "ago"], ans: 1 },
+            { level: "B1", q: "Look at those black clouds! It ___ rain soon.", opts: ["will", "is going to", "rains"], ans: 1 },
+            { level: "B1", q: "The man ___ car was stolen called the police immediately.", opts: ["who", "which", "whose"], ans: 2 },
+            { level: "B2", q: "You'd better ___ now, or you will miss your flight!", opts: ["leave", "to leave", "leaving"], ans: 0 },
+            { level: "B2", q: "If I ___ you, I would accept that job offer.", opts: ["am", "was", "were"], ans: 2 },
+            { level: "B2", q: "She is a nurse, so she is used to ___ at night.", opts: ["work", "working", "worked"], ans: 1 },
+            { level: "C1", q: "Had I known about the traffic jam, I ___ an earlier train.", opts: ["would take", "took", "would have taken"], ans: 2 },
+            { level: "C1", q: "Not only ___ the exam, but she also got the highest grade.", opts: ["she passed", "did she pass", "passed she"], ans: 1 },
+            { level: "C1", q: "It is high time the government ___ action on climate change.", opts: ["takes", "took", "will take"], ans: 1 }
+        ];
+
+        let tqIndex = 0;
+        let tqScore = 0;
+
+        function startLevelTest() {
+            tqIndex = 0;
+            tqScore = 0;
+            document.getElementById('test-intro-box').classList.add('hidden');
+            document.getElementById('test-result-box').classList.add('hidden');
+            document.getElementById('test-quiz-box').classList.remove('hidden');
+            renderLevelTestQuestion();
+        }
+
+        function renderLevelTestQuestion() {
+            const item = levelTestQuestions[tqIndex];
+            document.getElementById('tq-num').textContent = tqIndex + 1;
+            document.getElementById('tq-badge').textContent = `Niveau ${item.level}`;
+            document.getElementById('tq-progress').style.width = `${((tqIndex + 1) / levelTestQuestions.length) * 100}%`;
+            document.getElementById('tq-question').textContent = item.q;
+
+            const optsBox = document.getElementById('tq-options');
+            optsBox.innerHTML = '';
+            item.opts.forEach((optText, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border border-brand-borderLight hover:border-brand-blue hover:bg-brand-blueLight/40 font-semibold text-sm text-brand-slateDark transition-all";
+                btn.textContent = optText;
+                btn.onclick = () => submitLevelTestAnswer(i);
+                optsBox.appendChild(btn);
+            });
+        }
+
+        function submitLevelTestAnswer(chosenIdx) {
+            if (chosenIdx === levelTestQuestions[tqIndex].ans) {
+                tqScore++;
+            }
+            tqIndex++;
+            if (tqIndex < levelTestQuestions.length) {
+                renderLevelTestQuestion();
+            } else {
+                finishLevelTest();
+            }
+        }
+
+        function finishLevelTest() {
+            document.getElementById('test-quiz-box').classList.add('hidden');
+            document.getElementById('test-result-box').classList.remove('hidden');
+            document.getElementById('tr-score').textContent = tqScore;
+
+            let cefr = "A1";
+            let title = "Débutant (A1)";
+            let advice = "Vous maîtrisez les bases essentielles. Commencez par les fiches de niveau A1-A2 (Présent simple, Do/Does/Did, For/Since/Ago).";
+
+            if (tqScore >= 14) {
+                cefr = "C1";
+                title = "Avancé / Autonome (C1)";
+                advice = "Excellent résultat ! Vous maîtrisez les structures complexes, les inversions et le conditionnel passé.";
+            } else if (tqScore >= 11) {
+                cefr = "B2";
+                title = "Intermédiaire Supérieur (B2)";
+                advice = "Très bon niveau ! Consolidez vos acquis avec les fiches sur Used to, le Conditionnel et les faux-amis.";
+            } else if (tqScore >= 8) {
+                cefr = "B1";
+                title = "Intermédiaire (B1)";
+                advice = "De bonnes bases ! Révisez le Present Perfect, Had better et la Voix Passive pour franchir un cap.";
+            } else if (tqScore >= 5) {
+                cefr = "A2";
+                title = "Élémentaire (A2)";
+                advice = "Vous êtes sur la bonne voie. Entraînez-vous régulièrement sur les verbes irréguliers A1-A2 et les comparatifs.";
+            }
+
+            document.getElementById('tr-cefr').textContent = cefr;
+            document.getElementById('tr-title').textContent = title;
+            document.getElementById('tr-advice').textContent = advice;
+        }
+
+        // ---------------------------------------------------------------------
+        // 6. MINI-JEU DU COFFRE MYSTÈRE
+        // ---------------------------------------------------------------------
+        const mysteryWords = [
+            { word: "LIBRARY", hint: "Faux-ami célèbre : endroit où l'on emprunte des livres gratuitement (Bibliothèque)." },
+            { word: "UMBRELLA", hint: "Accessoire indispensable quand il pleut à Londres." },
+            { word: "KNOWLEDGE", hint: "Nom signifiant « le savoir / la connaissance » (commence par un K muet)." },
+            { word: "YESTERDAY", hint: "Marqueur temporel qui impose l'emploi du Prétérit simple." },
+            { word: "ACTUALLY", hint: "Adverbe signifiant « en réalité / en fait » (et non actuellement !)." },
+            { word: "THOUGHT", hint: "Prétérit et participe passé du verbe irrégulier THINK." }
+        ];
+
+        let mgCurrent = null;
+        let mgGuessed = [];
+        let mgLives = 6;
+
+        function initMysteryGame() {
+            mgCurrent = mysteryWords[Math.floor(Math.random() * mysteryWords.length)];
+            mgGuessed = [];
+            mgLives = 6;
+            document.getElementById('game-hint').textContent = mgCurrent.hint;
+            document.getElementById('game-status-banner').classList.add('hidden');
+            renderMysteryGame();
+        }
+
+        function renderMysteryGame() {
+            document.getElementById('game-lives').textContent = mgLives;
+
+            const slots = document.getElementById('game-word-slots');
+            slots.innerHTML = '';
+            let allFound = true;
+
+            for (const ch of mgCurrent.word) {
+                const box = document.createElement('div');
+                box.className = "w-10 h-12 sm:w-12 sm:h-14 rounded-xl border-2 border-brand-blue bg-brand-blueLight/40 flex items-center justify-center text-xl font-black text-brand-slateDark";
+                if (mgGuessed.includes(ch) || mgLives <= 0) {
+                    box.textContent = ch;
+                } else {
+                    box.textContent = "";
+                    allFound = false;
+                }
+                slots.appendChild(box);
+            }
+
+            const kb = document.getElementById('game-keyboard');
+            kb.innerHTML = '';
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for (const letter of alphabet) {
+                const btn = document.createElement('button');
+                const used = mgGuessed.includes(letter);
+                btn.disabled = used || allFound || mgLives <= 0;
+                btn.textContent = letter;
+                btn.className = used
+                    ? (mgCurrent.word.includes(letter)
+                        ? "w-9 h-10 rounded-lg bg-brand-blue text-white text-xs font-bold opacity-90"
+                        : "w-9 h-10 rounded-lg bg-slate-200 text-slate-400 text-xs font-bold")
+                    : "w-9 h-10 rounded-lg bg-brand-slateBg border border-brand-borderLight hover:border-brand-blue text-brand-slateDark text-xs font-bold transition-colors";
+                btn.onclick = () => guessMysteryLetter(letter);
+                kb.appendChild(btn);
+            }
+
+            const banner = document.getElementById('game-status-banner');
+            if (allFound) {
+                banner.classList.remove('hidden', 'bg-brand-redLight', 'text-brand-red');
+                banner.classList.add('bg-brand-blueLight', 'text-brand-blueDark');
+                banner.innerHTML = `🎉 Félicitations ! Le mot mystère était bien <strong>${mgCurrent.word}</strong>. <button onclick="speakEnglish('${mgCurrent.word}')" class="ml-2 underline">🔊 Écouter</button>`;
+            } else if (mgLives <= 0) {
+                banner.classList.remove('hidden', 'bg-brand-blueLight', 'text-brand-blueDark');
+                banner.classList.add('bg-brand-redLight', 'text-brand-red');
+                banner.innerHTML = `Dommage ! Le mot caché était <strong>${mgCurrent.word}</strong>.`;
+            }
+        }
+
+        function guessMysteryLetter(letter) {
+            if (mgGuessed.includes(letter) || mgLives <= 0) return;
+            mgGuessed.push(letter);
+            if (!mgCurrent.word.includes(letter)) {
+                mgLives--;
+            }
+            renderMysteryGame();
+        }
+
+        // ---------------------------------------------------------------------
+        // 7. INITIALISATION GLOBALE AU CHARGEMENT
+        // ---------------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshHeaderProgress();
+            navigateTo('home');
+            filterLessons();
+            initVerbStats();
+            renderVerbsTable();
+            initMysteryGame();
+        });
+    </script>
+</body>
+</html>
